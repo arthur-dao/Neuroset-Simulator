@@ -4,7 +4,7 @@
 > 
 > **Due April 7th 11:59 PM** with individual demos week of April 8th.
 >
-> #### Members: Arthur, Norman, Timmy, Taseen
+> #### Members: Arthur, Norman, Timmy, Taseen, Hugh
 
 --- 
 
