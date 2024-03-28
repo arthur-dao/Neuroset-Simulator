@@ -2,7 +2,7 @@
 
 > **Team Project**: 50% (with weekly deliverables)
 > 
-> **Due April 7th 11:59 PM** with individual demos week of April 8th.
+> **Due April 12th 11:59 PM** with individual demos week of (April 15th?).
 >
 > #### Members: Arthur, Norman, Timmy, Taseen, Hugh
 
