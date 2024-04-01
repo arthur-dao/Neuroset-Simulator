@@ -1,0 +1,26 @@
+title Sequence Diagram: Normal Operation of Treatment with Neureset Device
+
+participant MainWindow
+participant PCWindow
+participant HandheldDevice
+participant Headset
+participant Electrode
+participant Session
+participant Frequency
+
+HandheldDevice->MainWindow: beginSession(start)
+MainWindow->PCWindow: displaySessions(sessions)
+MainWindow->HandheldDevice: createSessions()
+HandheldDevice->Headset: calculateAllBaselines()
+Headset->Electrode: calculateBaseline()
+Electrode->Headset: sendTreatment()
+Headset->Electrode: treatAllElectrodes()
+Electrode->Session: ???
+Session->Frequency: Recalculate brainwave frequency
+Frequency->Session: Repeat process for duration of one second
+Session->HandheldDevice: Monitor session (green light flashes)
+HandheldDevice->PCWindow: Pause session if contact is lost (red light flashes)
+PCWindow->MainWindow: End session if contact is not reestablished within 5 minutes
+MainWindow->PCWindow: Calculate new baseline at end of session
+PCWindow->HandheldDevice: User can voluntarily pause the session
+HandheldDevice->Session: Record before-and-after dominant average frequencies for each site
