@@ -16,7 +16,8 @@ SOURCES += \
     PCWindow.cpp \
     Session.cpp \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    qledlabel.cpp
 
 HEADERS += \
     Electrode.h \
@@ -26,7 +27,8 @@ HEADERS += \
     PCWindow.h \
     Session.h \
     defs.h \
-    mainwindow.h
+    mainwindow.h \
+    qledlabel.h
 
 FORMS += \
     mainwindow.ui
