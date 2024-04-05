@@ -33,6 +33,8 @@ class HandheldDevice{
     private:
         RunStatus status;
         int batteryPercent;
+        bool contact;
+        bool treatmentSig;
 
         QTimer  stopTimer;
         QTimer  runTimer;
