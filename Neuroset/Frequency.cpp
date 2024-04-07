@@ -4,6 +4,10 @@ Frequency::Frequency(){
 
 }
 
+Frequency::~Frequency(){
+
+}
+
 float Frequency::getInitialFrequency(){
 
 }

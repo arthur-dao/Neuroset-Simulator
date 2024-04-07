@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>330</width>
+    <width>368</width>
     <height>360</height>
    </rect>
   </property>
@@ -38,18 +38,11 @@
      <rect>
       <x>260</x>
       <y>130</y>
-      <width>61</width>
+      <width>82</width>
       <height>91</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="MenuControls">
-     <item>
-      <widget class="QPushButton" name="menuButton">
-       <property name="text">
-        <string>Menu</string>
-       </property>
-      </widget>
-     </item>
      <item>
       <widget class="QPushButton" name="menuUp">
        <property name="text">
@@ -77,21 +70,21 @@
     </property>
     <layout class="QHBoxLayout" name="ControlButtons">
      <item>
-      <widget class="QPushButton" name="pushButton">
+      <widget class="QPushButton" name="pauseButton">
        <property name="text">
         <string>Pause</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton_2">
+      <widget class="QPushButton" name="startButton">
        <property name="text">
         <string>Start</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton_3">
+      <widget class="QPushButton" name="stopButton">
        <property name="text">
         <string>Stop</string>
        </property>
@@ -117,8 +110,8 @@
      <rect>
       <x>260</x>
       <y>10</y>
-      <width>61</width>
-      <height>51</height>
+      <width>82</width>
+      <height>58</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="PowerButtons">

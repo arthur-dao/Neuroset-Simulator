@@ -4,6 +4,10 @@ Electrode::Electrode(){
 
 }
 
+Electrode::~Electrode(){
+
+}
+
 float Electrode::calculateBaseline(){
 
 }

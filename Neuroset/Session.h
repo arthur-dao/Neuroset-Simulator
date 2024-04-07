@@ -10,6 +10,7 @@ class Session{
 
     public:
         Session();
+        ~Session();
         void addFrequency(float, float);
 
     private:

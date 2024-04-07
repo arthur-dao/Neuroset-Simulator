@@ -6,11 +6,17 @@
 #include "Session.h"
 
 #include "QTimer"
+#include "QObject"
+#include "QDebug"
 
-class HandheldDevice{
+class HandheldDevice : public QObject{
+    Q_OBJECT
 
     public:
-        HandheldDevice();
+        HandheldDevice(int=100);
+        ~HandheldDevice();
+
+    public slots:
         void createSession();
         void pauseSession();
         void shutdown();
@@ -22,13 +28,15 @@ class HandheldDevice{
         void pause();
         void resume();
 
-        void navigate();
+        void navigateUp();
+        void navigateDown();
         void select();
         void menuToggle();
         void uploadToPC();
         void updateMenu();
 
         void powerToggle();
+        void reduceBattery();
 
     private:
         RunStatus status;

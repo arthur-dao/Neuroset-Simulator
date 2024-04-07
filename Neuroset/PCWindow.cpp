@@ -3,3 +3,8 @@
 PCWindow::PCWindow(){
 
 }
+
+PCWindow::~PCWindow(){
+
+}
+

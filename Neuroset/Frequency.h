@@ -4,6 +4,7 @@
 class Frequency{
     public:
         Frequency();
+        ~Frequency();
         float getInitialFrequency();
         float getFinalFrequency();
 

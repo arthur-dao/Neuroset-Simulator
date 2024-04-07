@@ -4,6 +4,7 @@
 class PCWindow{
     public:
         PCWindow();
+        ~PCWindow();
 
 };
 

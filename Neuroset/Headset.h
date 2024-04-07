@@ -12,6 +12,7 @@ class Headset{
 
     public:
         Headset();
+        ~Headset();
         void calculateAllBaselines();
         void treatAllElectrodes();
 

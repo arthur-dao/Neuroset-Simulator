@@ -5,6 +5,7 @@ class Electrode{
 
     public:
         Electrode();
+        ~Electrode();
         float calculateBaseline();
         void sendTreatment();
 
