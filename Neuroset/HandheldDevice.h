@@ -17,6 +17,8 @@ class HandheldDevice : public QObject{
         explicit HandheldDevice(int batteryLevel = 100);
         ~HandheldDevice();
 
+    int getBattery(){return batteryPercent;};
+
     public slots:
         void createSession();
         void shutdown();

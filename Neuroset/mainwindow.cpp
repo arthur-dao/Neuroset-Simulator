@@ -6,6 +6,10 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
     device = new HandheldDevice();
 
+    timeInterval = new QTimer(this);
+    timeInterval->start(3000);
+    connect(timeInterval, SIGNAL(timeout()), this, SLOT(update()));
+
     connect(ui->exitButton, SIGNAL(clicked()), this, SLOT(close()));
 
     connect(ui->stopButton, SIGNAL(released()), device, SLOT(stop()));
@@ -20,4 +24,9 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
 MainWindow::~MainWindow() {
     delete ui;
+}
+
+void MainWindow::update(){
+    QString battery = QString("%3").arg(device->getBattery());
+    ui->batteryIndicator->setText(battery + "%");
 }

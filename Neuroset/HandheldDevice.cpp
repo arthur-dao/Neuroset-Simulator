@@ -131,6 +131,9 @@ void HandheldDevice::powerToggle() {
 }
 
 void HandheldDevice::reduceBattery() {
+    if (deviceStatus){
+        return;
+    }
     if (batteryPercent > 0) {
         batteryPercent--;
         qDebug() << "Battery level now at " << batteryPercent << "%.";

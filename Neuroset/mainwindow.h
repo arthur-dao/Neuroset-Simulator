@@ -22,5 +22,6 @@ private:
     QTimer* timeInterval;
 
 private slots:
+    void update();
 };
 #endif // MAINWINDOW_H
