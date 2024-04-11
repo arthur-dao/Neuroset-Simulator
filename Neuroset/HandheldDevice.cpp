@@ -1,88 +1,156 @@
 #include "HandheldDevice.h"
 
-int HandheldDevice::size = MAX_SIZE;
-
-HandheldDevice::HandheldDevice(int battery){
-    batteryPercent = battery;
+HandheldDevice::HandheldDevice(int battery) : deviceStatus(ON), runStatus(INACTIVE), batteryPercent(battery), contact(false), treatmentSig(false) {
+    // Initialize timers
+    connect(&stopTimer, &QTimer::timeout, this, &HandheldDevice::shutdown);
+    connect(&runTimer, &QTimer::timeout, this, &HandheldDevice::reduceBattery);
+    runTimer.start(3000); // battery lasts 5min. battery is supposed to fully deplete every 2-3 treatments (29s per treatment)
 }
 
-HandheldDevice::~HandheldDevice(){
-
-}
+HandheldDevice::~HandheldDevice() {}
 
 void HandheldDevice::createSession(){
-    qInfo("Session started");
+    if (deviceStatus == OFF || batteryPercent <= 0) {
+        qDebug() << "Cannot start session: Device is off or battery is low.";
+        return;
+    }
+    runStatus = ACTIVE;
+    // init new session
+    qDebug() << "New session created and ready to start.";
+    beginSession();
 }
 
-void HandheldDevice::pauseSession(){
-
+void HandheldDevice::shutdown() {
+    if (runStatus == ACTIVE || runStatus == PAUSED) {
+        stop();
+    }
+    qDebug() << "Device shutting down...";
+    deviceStatus = OFF;
+    batteryPercent = 0;
 }
 
-void HandheldDevice::shutdown(){
-    qInfo("Shutdown");
+void HandheldDevice::beginSession() {
+    if (deviceStatus != ON) {
+        qDebug() << "Trying to begin a session without it being set to active.";
+        return;
+    }
+    qDebug() << "Session has begun.";
+    //start reading eeg data and applying treaments
 }
 
-void HandheldDevice::beginSession(){
-
+void HandheldDevice::stop() {
+    if (runStatus != ACTIVE && runStatus != PAUSED) {
+        qDebug() << "No session is currently running or paused to stop.";
+        return;
+    }
+    // do something here
+    runStatus = INACTIVE;
+    qDebug() << "Session stopped.";
 }
 
-void HandheldDevice::dateTimeSelection(){
-
+void HandheldDevice::pause() {
+    if (runStatus != ACTIVE) {
+        qDebug() << "No active session to pause.";
+        return;
+    }
+    runStatus = PAUSED;
+    qDebug() << "Session paused.";
 }
 
-void HandheldDevice::displaySessionLog(){
+void HandheldDevice::resume() {
+    if (deviceStatus == OFF) {
+        qDebug() << "Cannot resume: Device is turned off.";
+        return;
+    } else if (deviceStatus == ON && runStatus == DISCONNECTED) {
+        qDebug() << "Cannot resume: Device is disconnected.";
+        return;
+    }
 
-}
-
-void HandheldDevice::stop(){
-    qInfo("Stop");
-}
-
-void HandheldDevice::pause(){
-    qInfo("Pause");
-}
-
-void HandheldDevice::resume(){
-    qInfo("Resume");
-}
-
-void HandheldDevice::navigateUp(){
-
-    qInfo("Navigate Up");
-
-}
-
-void HandheldDevice::navigateDown(){
-
-    qInfo("Navigate Down");
-
-}
-
-void HandheldDevice::select(){
-
-}
-
-void HandheldDevice::menuToggle(){
-    qInfo("Menu");
-}
-
-void HandheldDevice::uploadToPC(){
-
-}
-
-void HandheldDevice::updateMenu(){
-
-}
-
-void HandheldDevice::powerToggle(){
-    qInfo("Power");
-}
-
-void HandheldDevice::reduceBattery(){
-    qInfo("Reduce battery");
-    if(batteryPercent != 0){
-
-        batteryPercent--;
-        qDebug() << batteryPercent;
+    if (runStatus == INACTIVE) {
+        qDebug() << "No active session found. Starting a new session.";
+        createSession();
+    }
+    else if (runStatus == PAUSED) {
+        runStatus = ACTIVE;
+        qDebug() << "Session resumed.";
+        //resume type shi
+    }
+    else if (runStatus == ACTIVE) {
+        qDebug() << "Session is already active.";
+    }
+    else {
+        qDebug() << "Session cannot be resumed due to unexpected state.";
     }
 }
+
+void HandheldDevice::dateTimeSelection() {
+    qDebug() << "Date and time selection accessed.";
+    // ui component
+}
+
+void HandheldDevice::displaySessionLog() {
+    qDebug() << "Displaying session log...";
+    // iterate session logs
+}
+
+void HandheldDevice::navigateUp() {
+    qDebug() << "Navigated up in menu.";
+}
+
+void HandheldDevice::navigateDown() {
+    qDebug() << "Navigated down in menu.";
+}
+
+void HandheldDevice::select() {
+    qDebug() << "Menu item selected.";
+}
+
+void HandheldDevice::menuToggle() {
+    qDebug() << "Menu toggled.";
+}
+
+void HandheldDevice::uploadToPC() {
+    qDebug() << "Session data being prepared for upload to PC...";
+}
+
+void HandheldDevice::updateMenu() {
+    qDebug() << "Updating menu display...";
+}
+
+void HandheldDevice::powerToggle() {
+    if (deviceStatus == OFF) {
+        deviceStatus = ON;
+        qDebug() << "Device powered on. Ready for operation.";
+        runStatus = INACTIVE;
+        chargeBatteryToFull();
+        runTimer.start(3000);
+    } else {
+        qDebug() << "Shutting down the device...";
+        shutdown();
+    }
+}
+
+void HandheldDevice::reduceBattery() {
+    if (batteryPercent > 0) {
+        batteryPercent--;
+        qDebug() << "Battery level now at " << batteryPercent << "%.";
+        if (batteryPercent == 0) {
+            shutdown();
+        }
+    }
+}
+
+void HandheldDevice::chargeBatteryToFull() { //link this to some button i guess
+    batteryPercent = 100;
+    qDebug() << "Battery fully charged.";
+}
+
+void HandheldDevice::disconnect() {
+    if (deviceStatus == ON && (runStatus == ACTIVE || runStatus == PAUSED)) {
+        runStatus = DISCONNECTED;
+        qDebug() << "Device disconnected. Awaiting reconnection...";
+        // reconnect type shi
+    }
+}
+
+

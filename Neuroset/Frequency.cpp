@@ -1,17 +1,12 @@
 #include "Frequency.h"
 
-Frequency::Frequency(){
+Frequency::Frequency(float initial, float final)
+    : initialFrequency(initial), finalFrequency(final) {}
 
+float Frequency::getInitialFrequency() const {
+    return initialFrequency;
 }
 
-Frequency::~Frequency(){
-
-}
-
-float Frequency::getInitialFrequency(){
-
-}
-
-float Frequency::getFinalFrequency(){
-
+float Frequency::getFinalFrequency() const {
+    return finalFrequency;
 }

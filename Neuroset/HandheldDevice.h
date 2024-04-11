@@ -8,26 +8,26 @@
 #include "QTimer"
 #include "QObject"
 #include "QDebug"
+#include <list>
 
 class HandheldDevice : public QObject{
     Q_OBJECT
 
     public:
-        HandheldDevice(int=100);
+        explicit HandheldDevice(int batteryLevel = 100);
         ~HandheldDevice();
 
     public slots:
         void createSession();
-        void pauseSession();
         void shutdown();
         void beginSession();
-        void dateTimeSelection();
-        void displaySessionLog();
 
         void stop();
         void pause();
         void resume();
 
+        void dateTimeSelection();
+        void displaySessionLog();
         void navigateUp();
         void navigateDown();
         void select();
@@ -37,18 +37,21 @@ class HandheldDevice : public QObject{
 
         void powerToggle();
         void reduceBattery();
+        void chargeBatteryToFull();
+        void disconnect();
 
     private:
-        RunStatus status;
+        DeviceStatus deviceStatus;
+        RunStatus runStatus;
         int batteryPercent;
         bool contact;
         bool treatmentSig;
 
-        QTimer  stopTimer;
-        QTimer  runTimer;
+        QTimer stopTimer;
+        QTimer runTimer;
 
-        list<Session> sessions;
-        static int size;
+        std::list<Session> sessions;
+        static const int size = MAX_SIZE;
 };
 
 #endif // HANDHELDDEVICE_H

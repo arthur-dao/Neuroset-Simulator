@@ -3,6 +3,7 @@
 
 typedef enum {ACTIVE, INACTIVE, PAUSED, DISCONNECTED} RunStatus;
 
+typedef enum {ON, OFF} DeviceStatus;
 
 //Size of lists
 #define MAX_SIZE 21;

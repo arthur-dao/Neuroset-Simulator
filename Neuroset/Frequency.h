@@ -3,10 +3,11 @@
 
 class Frequency{
     public:
-        Frequency();
+        Frequency(float initial, float final);
         ~Frequency();
-        float getInitialFrequency();
-        float getFinalFrequency();
+
+        float getInitialFrequency() const;
+        float getFinalFrequency() const;
 
     private:
         float initialFrequency;

@@ -6,10 +6,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
     device = new HandheldDevice();
 
-    timeInterval = new QTimer(this);
-    timeInterval->start(10000);
-    connect(timeInterval, SIGNAL(timeout()), device, SLOT(reduceBattery()));
-
     connect(ui->exitButton, SIGNAL(clicked()), this, SLOT(close()));
 
     connect(ui->stopButton, SIGNAL(released()), device, SLOT(stop()));
@@ -20,7 +16,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     connect(ui->menuDown, SIGNAL(released()), device, SLOT(navigateDown()));
 
     connect(ui->powerButton, SIGNAL(released()), device, SLOT(powerToggle()));
-
 }
 
 MainWindow::~MainWindow() {

@@ -1,22 +1,26 @@
 #ifndef SESSION_H
 #define SESSION_H
 
+#include <QDateTime>
+#include <QList>
 #include "Frequency.h"
+#include "Headset.h"
 
-#include "QDateTime"
-#include "QList"
+class Session {
+public:
+    Session();
 
-class Session{
+    void startSession();
+    void analyzeData();
+    void endSession();
 
-    public:
-        Session();
-        ~Session();
-        void addFrequency(float, float);
+    void addFrequency(float initial, float final);
 
-    private:
-        QDateTime startDateTime;
-        QList<Frequency> frequencies;
-
+private:
+    QDateTime startDateTime;
+    QDateTime endDateTime;
+    QList<Frequency> frequencies;
+    Headset headset;
 };
 
 #endif // SESSION_H

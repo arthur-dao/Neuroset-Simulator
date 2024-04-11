@@ -3,25 +3,23 @@
 
 #include "defs.h"
 #include "Electrode.h"
+#include <vector>
 
-#include "list"
-
-using namespace std;
-
-class Headset{
+class Headset {
 
     public:
         Headset();
-        ~Headset();
+        ~Headset() = default;
+
         void calculateAllBaselines();
         void treatAllElectrodes();
+        void startSimulation();
 
     private:
-        float frquencyOffset;
+        static const int NUM_ELECTRODES = MAX_SIZE;
+        static constexpr float FREQUENCY_OFFSET = 5.0f;
 
-        list<Electrode> electrodes;
-
-        static int size;
+        std::vector<Electrode> electrodes;
 };
 
 #endif // HEADSET_H
