@@ -8,6 +8,18 @@ HandheldDevice::HandheldDevice(Headset* headset, int battery, QObject* parent)
     connect(&stopTimer, &QTimer::timeout, this, &HandheldDevice::shutdown);
     connect(&runTimer, &QTimer::timeout, this, &HandheldDevice::reduceBattery);
     runTimer.start(3000); // battery lasts 5min. battery is supposed to fully deplete every 2-3 treatments (29s per treatment)
+
+
+
+    //temp sessions
+    QList<Frequency> freq;
+    Session s1(freq);
+    Session s2(freq);
+    Session s3(freq);
+    sessions.push_back(s1);
+    sessions.push_back(s2);
+    sessions.push_back(s3);
+
 }
 
 HandheldDevice::~HandheldDevice() {}
@@ -40,6 +52,10 @@ void HandheldDevice::beginSession() {
     qDebug() << "Session has begun.";
     headset->startSimulation(500, 1);
 //    emit sessionStarted();
+}
+
+list<Session> HandheldDevice::getSessions(){
+    return sessions;
 }
 
 void HandheldDevice::stop() {
@@ -96,22 +112,16 @@ void HandheldDevice::dateTimeSelection() {
     // ui component
 }
 
-void HandheldDevice::displaySessionLog() {
-    qDebug() << "Displaying session log...";
-    // iterate session logs
-}
+//display session log is not really needed here, we just return it into main window
+//void HandheldDevice::displaySessionLog() {
+//    qDebug() << "Displaying session log...";
+//    // iterate session logs
 
-void HandheldDevice::navigateUp() {
-    qDebug() << "Navigated up in menu.";
-}
+//    for(size_t i=0;i<sessions.size();i++){
 
-void HandheldDevice::navigateDown() {
-    qDebug() << "Navigated down in menu.";
-}
+//    }
+//}
 
-void HandheldDevice::select() {
-    qDebug() << "Menu item selected.";
-}
 
 void HandheldDevice::menuToggle() {
     qDebug() << "Menu toggled.";
