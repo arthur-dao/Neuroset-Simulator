@@ -15,8 +15,8 @@ class Electrode{
         float calculateBaseline();
         void sendTreatment(float offsetFrequency, int duration, int intervals);
 
-        float getBaselineAverageBefore() const;
-        float getBaselineAverageAfter() const;
+        float getBaselineAverageBefore() const { return baselineAverageBefore; }
+        float getBaselineAverageAfter() const {return baselineAverageAfter; }
 
 
     private:
@@ -27,7 +27,7 @@ class Electrode{
         std::vector<float> frequencies;
         std::vector<float> amplitudes;
 
-        std::vector<float> simulateEEGSignal(int sampleRate, int durationSeconds, const std::vector<float>& frequencies, const std::vector<float>& amplitudes);
+        std::vector<float> simulateEEGSignal(int sampleRate, int durationSeconds);
         float generateSignalValue(float frequency, float amplitude, int sampleIndex, int sampleRate);
 };
 

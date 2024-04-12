@@ -17,7 +17,8 @@ SOURCES += \
     Session.cpp \
     main.cpp \
     mainwindow.cpp \
-    qledlabel.cpp
+    qcustomplot.cpp \
+    qledlabel.cpp \
 
 HEADERS += \
     Electrode.h \
@@ -28,6 +29,7 @@ HEADERS += \
     Session.h \
     defs.h \
     mainwindow.h \
+    qcustomplot.h \
     qledlabel.h
 
 FORMS += \
@@ -37,3 +39,6 @@ FORMS += \
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+QT += printsupport
+

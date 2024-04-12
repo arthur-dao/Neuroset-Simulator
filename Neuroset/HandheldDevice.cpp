@@ -1,6 +1,9 @@
 #include "HandheldDevice.h"
 
-HandheldDevice::HandheldDevice(int battery) : deviceStatus(ON), runStatus(INACTIVE), batteryPercent(battery), contact(false), treatmentSig(false) {
+HandheldDevice::HandheldDevice(Headset* headset, int battery, QObject* parent)
+: QObject(parent), headset(headset), deviceStatus(ON), runStatus(INACTIVE),
+  batteryPercent(battery), contact(false), treatmentSig(false) {
+
     // Initialize timers
     connect(&stopTimer, &QTimer::timeout, this, &HandheldDevice::shutdown);
     connect(&runTimer, &QTimer::timeout, this, &HandheldDevice::reduceBattery);
@@ -15,7 +18,7 @@ void HandheldDevice::createSession(){
         return;
     }
     runStatus = ACTIVE;
-    // init new session
+    // create a session
     qDebug() << "New session created and ready to start.";
     beginSession();
 }
@@ -35,7 +38,8 @@ void HandheldDevice::beginSession() {
         return;
     }
     qDebug() << "Session has begun.";
-    //start reading eeg data and applying treaments
+    headset->startSimulation(500, 1);
+//    emit sessionStarted();
 }
 
 void HandheldDevice::stop() {
@@ -43,9 +47,13 @@ void HandheldDevice::stop() {
         qDebug() << "No session is currently running or paused to stop.";
         return;
     }
-    // do something here
+
+    if (headset) {
+        headset->stopSimulation();
+    }
+
     runStatus = INACTIVE;
-    qDebug() << "Session stopped.";
+    qDebug() << "Session and simulation stopped.";
 }
 
 void HandheldDevice::pause() {
@@ -131,10 +139,7 @@ void HandheldDevice::powerToggle() {
 }
 
 void HandheldDevice::reduceBattery() {
-    if (deviceStatus){
-        return;
-    }
-    if (batteryPercent > 0) {
+    if (batteryPercent > 0 && runStatus == ACTIVE) {
         batteryPercent--;
         qDebug() << "Battery level now at " << batteryPercent << "%.";
         if (batteryPercent == 0) {

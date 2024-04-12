@@ -11,10 +11,10 @@ public:
     Session();
 
     void startSession();
-    void analyzeData();
-    void endSession();
 
+    void setActiveElectrode(int electrodeIndex);
     void addFrequency(float initial, float final);
+    void selectElectrode(int electrodeIndex);
 
 private:
     QDateTime startDateTime;
