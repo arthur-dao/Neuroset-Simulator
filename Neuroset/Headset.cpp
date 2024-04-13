@@ -37,7 +37,7 @@ std::vector<float> Headset::calculateBaselines(int durationSeconds) {
         auto waveform = electrode.generateWaveform(sampleRate, durationSeconds);
         float freq = electrode.calculateDominantFrequency();
         baselineFrequencies.push_back(freq);
-        qDebug() << "Baseline frequency for electrode" << electrode.getSiteNum() << ":" << freq;
+        qDebug() << "Baseline frequency for electrode" << electrode.getSiteNum() + 1 << ":" << freq;
     }
 
     return baselineFrequencies;
@@ -50,10 +50,9 @@ void Headset::applyTreatmentToAllElectrodes() {
 
 void Headset::applyTreatmentToOneElectrode(int index) {
     if (index < NUM_ELECTRODES) {
-        qDebug() << "Starting treatment for electrode" << index;
+        qDebug() << "Starting treatment for electrode" << index + 1;
         const float lensTreatmentDurationSeconds = 1.0f; // Treatment lasts for 1 second
         const float lensOffsetFrequency = 5.0f; // Frequency offset applied during LENS treatment
-
         electrodes[index].applyLENS(sampleRate, lensTreatmentDurationSeconds, lensOffsetFrequency);
         treatmentTimer->start(1000 / 16);  // Trigger recalculation every 1/16 second within the 1-second treatment
     } else {

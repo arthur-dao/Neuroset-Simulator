@@ -13,6 +13,7 @@ class Headset : public QObject {
 public:
     explicit Headset(QObject *parent = nullptr);
     ~Headset();
+    int getSiteNum() { return NUM_ELECTRODES; };
     void startSimulation(int sampleRate);
     void stopSimulation();
     std::vector<float> calculateBaselines(int durationSeconds);

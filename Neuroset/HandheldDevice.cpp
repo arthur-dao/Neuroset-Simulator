@@ -6,8 +6,10 @@ HandheldDevice::HandheldDevice(Headset* headset, int battery, QObject* parent)
 
     // Initialize timers
     connect(&stopTimer, &QTimer::timeout, this, &HandheldDevice::shutdown);
-    connect(&runTimer, &QTimer::timeout, this, &HandheldDevice::reduceBattery);
-    runTimer.start(3000); // battery lasts 5min. battery is supposed to fully deplete every 2-3 treatments (29s per treatment for testing)
+
+    treatment = new Treatment();
+
+    connect(this, &HandheldDevice::startSimulation, treatment, &Treatment::beginTreatment);
 
     pcWindow = new PCWindow();
     pcWindow->hide();
@@ -22,10 +24,14 @@ HandheldDevice::HandheldDevice(Headset* headset, int battery, QObject* parent)
     sessions.append(s2);
     sessions.append(s3);
 
+    treatment->moveToThread(&treatmentThread);
+    treatmentThread.start();
+
 }
 
 HandheldDevice::~HandheldDevice() {
-
+    treatmentThread.exit();
+    treatmentThread.wait();
 }
 
 void HandheldDevice::createSession(){
@@ -54,8 +60,8 @@ void HandheldDevice::beginSession() {
         return;
     }
     qDebug() << "Session has begun.";
-    headset->startSimulation(500);
-//    emit sessionStarted();
+    //headset->startSimulation(500);
+    emit startSimulation(headset);
 }
 
 QList<Session> HandheldDevice::getSessions(){
@@ -142,7 +148,7 @@ void HandheldDevice::powerToggle() {
 }
 
 void HandheldDevice::reduceBattery() {
-    if (batteryPercent > 0 && runStatus == ACTIVE) {
+    if (batteryPercent > 0 && deviceStatus == ON) {
         batteryPercent--;
         qDebug() << "Battery level now at " << batteryPercent << "%.";
         if (batteryPercent == 0) {

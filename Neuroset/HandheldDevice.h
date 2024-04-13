@@ -9,6 +9,8 @@
 #include <QDebug>
 #include <list>
 #include "pcwindow.h"
+#include "Treatment.h"
+#include <QThread>
 
 using namespace std;
 
@@ -22,6 +24,7 @@ public:
     int getBattery() { return batteryPercent; }
     RunStatus getRunStatus() { return runStatus; }
     QList<Session> getSessions();
+    int getSiteNum() { return headset->getSiteNum(); };
 
 public slots:
     void createSession();
@@ -43,6 +46,7 @@ public slots:
 signals:
     void sessionStarted();
     void sessionStopped();
+    void startSimulation(Headset*);
 
 private:
     Headset* headset;
@@ -52,6 +56,7 @@ private:
     bool contact;
     bool treatmentSig;
     Session* currentSession;
+    Treatment* treatment;
 
     QTimer stopTimer;
     QTimer runTimer;
@@ -59,6 +64,8 @@ private:
 
     static const int size = MAX_SIZE;
     PCWindow *pcWindow;
+
+    QThread treatmentThread;
 };
 
 #endif // HANDHELDDEVICE_H

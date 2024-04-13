@@ -3,11 +3,9 @@
 
 #include <QMainWindow>
 #include "HandheldDevice.h"
-#include "Headset.h"
-#include "Electrode.h"
 #include "qcustomplot.h"
-#include "defs.h"
 #include <QListWidget>
+#include <QThread>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -37,7 +35,10 @@ private:
     QListWidget *menuSelection;
     CurrentMenu currMenu;
 
+    QThread deviceThread;
+
     void updateList();
+
 
 private slots:
     void updateBattery();
