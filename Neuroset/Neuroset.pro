@@ -13,10 +13,10 @@ SOURCES += \
     Frequency.cpp \
     HandheldDevice.cpp \
     Headset.cpp \
-    PCWindow.cpp \
     Session.cpp \
     main.cpp \
     mainwindow.cpp \
+    pcwindow.cpp \
     qcustomplot.cpp \
     qledlabel.cpp \
 
@@ -25,15 +25,16 @@ HEADERS += \
     Frequency.h \
     HandheldDevice.h \
     Headset.h \
-    PCWindow.h \
     Session.h \
     defs.h \
     mainwindow.h \
+    pcwindow.h \
     qcustomplot.h \
     qledlabel.h
 
 FORMS += \
-    mainwindow.ui
+    mainwindow.ui \
+    pcwindow.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

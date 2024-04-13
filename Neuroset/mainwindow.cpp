@@ -24,15 +24,24 @@ MainWindow::MainWindow(QWidget *parent)
 
     device = new HandheldDevice(headset, 100);
 
+    //Init menu
+    menuSelection = ui->menuListWidget;
+    currMenu = MAIN;
+    updateList();
+    ui->tabWidget->setCurrentIndex(0);
+
     // Connect UI signals to slots
     connect(ui->exitButton, &QPushButton::clicked, this, &MainWindow::close);
     connect(ui->stopButton, &QPushButton::released, device, &HandheldDevice::stop);
     connect(ui->pauseButton, &QPushButton::released, device, &HandheldDevice::pause);
     connect(ui->startButton, &QPushButton::released, device, &HandheldDevice::resume);
-    connect(ui->menuUp, &QPushButton::released, device, &HandheldDevice::navigateUp);
-    connect(ui->menuDown, &QPushButton::released, device, &HandheldDevice::navigateDown);
-    connect(ui->powerButton, &QPushButton::released, device, &HandheldDevice::powerToggle);
 
+    connect(ui->menuUp, &QPushButton::released, this, &MainWindow::navigateUp);
+    connect(ui->menuDown, &QPushButton::released, this, &MainWindow::navigateDown);
+    connect(ui->menuSelect, &QPushButton::released, this, &MainWindow::select);
+    connect(ui->menuBack, &QPushButton::released, this, &MainWindow::back);
+
+    connect(ui->powerButton, &QPushButton::released, device, &HandheldDevice::powerToggle);
     connect(ui->electrodeCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(setActiveElectrodeIndex(int)));
 }
 
@@ -74,4 +83,76 @@ void MainWindow::setActiveElectrodeIndex(int index) {
     }
 }
 
+void MainWindow::navigateUp(){
+    int currentIndex = menuSelection->currentRow();
+    if (currentIndex <= 0) {
+        // If at the top, move to the bottom
+        menuSelection->setCurrentRow(menuSelection->count() - 1);
+    } else if (currentIndex > 0) {
+        menuSelection->setCurrentRow(currentIndex - 1);
+    }
+}
 
+void MainWindow::navigateDown(){
+    int currentIndex = menuSelection->currentRow();
+    int lastIndex = menuSelection->count() - 1;
+    if (currentIndex == lastIndex) {
+        // If at the bottom, move to the top
+        menuSelection->setCurrentRow(0);
+    } else if (currentIndex < lastIndex) {
+        menuSelection->setCurrentRow(currentIndex + 1);
+    }
+}
+
+void MainWindow::select(){
+    int currentIndex = menuSelection->currentRow();
+    if(currMenu == MAIN){
+        if(currentIndex == 0){
+            ui->tabWidget->setCurrentIndex(1);
+            device->beginSession();
+        }
+        else if(currentIndex == 1){
+            currMenu = SESSIONS;
+            updateList();
+        }
+        else if(currentIndex == 2){
+            currMenu = SETDATETIME;
+            updateList();
+        }
+    }
+    else if(currMenu == SESSIONS){
+        device->uploadToPC(currentIndex);
+    }
+}
+
+void MainWindow::back(){
+    if(currMenu != MAIN){
+        currMenu = MAIN;
+        updateList();
+    }
+    else if(ui->tabWidget->currentIndex() == 1){
+        ui->tabWidget->setCurrentIndex(0);
+    }
+}
+
+void MainWindow::updateList(){
+    menuSelection->clear();
+
+    if(currMenu == MAIN){
+        new QListWidgetItem(tr("Start Session"), menuSelection);
+        new QListWidgetItem(tr("Session Log"), menuSelection);
+        new QListWidgetItem(tr("Set Date and Time"), menuSelection);
+    }
+    else if(currMenu == SESSIONS){
+        int n = 1;
+        for(Session s : device->getSessions()){
+            QString row = "SESSION #" + QString::number(n) + ": " + s.getStart().toString() + " - " + s.getEnd().toString();
+            new QListWidgetItem(row, menuSelection);
+            n++;
+        }
+
+    }
+    else if(currMenu == SETDATETIME){
+
+    }
+}

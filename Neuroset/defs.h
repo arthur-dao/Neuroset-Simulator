@@ -2,7 +2,7 @@
 #define DEFS_H
 
 typedef enum {ACTIVE, INACTIVE, PAUSED, DISCONNECTED} RunStatus;
-
+typedef enum {MAIN, TREATING, SESSIONS, SETDATETIME} CurrentMenu;
 typedef enum {ON, OFF} DeviceStatus;
 
 //Size of lists

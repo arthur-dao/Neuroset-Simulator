@@ -1,19 +1,29 @@
 // Session.cpp
 #include "Session.h"
 
-#include "QDebug"
-
-
-Session::Session() : startDateTime(QDateTime::currentDateTime()) {}
-
-void Session::startSession() {
-
+Session::Session(QList<Frequency> freq, QDateTime start, QDateTime end){
+    frequencies = freq;
+    startDateTime = start;
+    endDateTime = end;
 }
 
-void Session::selectElectrode(int electrodeIndex) {
-    headset.setActiveElectrode(electrodeIndex);
+QDateTime Session::getStart(){
+    return startDateTime;
 }
 
-void Session::addFrequency(float initial, float final) {
-    frequencies.append(Frequency(initial, final));
+QDateTime Session::getEnd(){
+    return endDateTime;
+}
+
+QList<Frequency> Session::getFrequencies(){
+    return frequencies;
+}
+
+QString Session::toString(){
+    QString text = "SESSION: "  + startDateTime.toString() + " - " + endDateTime.toString() + "\n";
+    for(Frequency f : frequencies){
+        text += "\t Initial: " + QString::number(f.getInitialFrequency()) +  QString::number(f.getFinalFrequency()) + "\n";
+    }
+
+    return text;
 }
