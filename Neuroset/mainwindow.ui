@@ -38,11 +38,18 @@
      <rect>
       <x>260</x>
       <y>130</y>
-      <width>82</width>
-      <height>91</height>
+      <width>85</width>
+      <height>120</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="MenuControls">
+     <item>
+      <widget class="QPushButton" name="menuSelect">
+       <property name="text">
+        <string>Select</string>
+       </property>
+      </widget>
+     </item>
      <item>
       <widget class="QPushButton" name="menuUp">
        <property name="text">
@@ -54,6 +61,13 @@
       <widget class="QPushButton" name="menuDown">
        <property name="text">
         <string>Down</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="menuBack">
+       <property name="text">
+        <string>Back</string>
        </property>
       </widget>
      </item>
@@ -141,18 +155,18 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="tab">
      <attribute name="title">
       <string>Menu</string>
      </attribute>
-     <widget class="QTableWidget" name="uiWithMenu">
+     <widget class="QListWidget" name="menuListWidget">
       <property name="geometry">
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>231</width>
+        <width>227</width>
         <height>221</height>
        </rect>
       </property>

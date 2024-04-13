@@ -6,6 +6,8 @@
 #include "Headset.h"
 #include "Electrode.h"
 #include "qcustomplot.h"
+#include "defs.h"
+#include <QListWidget>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -32,9 +34,19 @@ private:
     QTimer *dataTimer;
     int currentElectrodeIndex;
 
+    QListWidget *menuSelection;
+    CurrentMenu currMenu;
+
+    void updateList();
+
 private slots:
     void updateBattery();
     void updateGraph();
     void setActiveElectrodeIndex(int index);
+
+    void navigateUp();
+    void navigateDown();
+    void select();
+    void back();
 };
 #endif // MAINWINDOW_H

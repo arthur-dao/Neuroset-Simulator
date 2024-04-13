@@ -8,6 +8,9 @@
 #include <QObject>
 #include <QDebug>
 #include <list>
+#include "pcwindow.h"
+
+using namespace std;
 
 class HandheldDevice : public QObject {
     Q_OBJECT
@@ -18,6 +21,7 @@ public:
 
     int getBattery() { return batteryPercent; }
     RunStatus getRunStatus() { return runStatus; }
+    QList<Session> getSessions();
 
 public slots:
     void createSession();
@@ -27,12 +31,9 @@ public slots:
     void pause();
     void resume();
     void dateTimeSelection();
-    void displaySessionLog();
-    void navigateUp();
-    void navigateDown();
-    void select();
+
     void menuToggle();
-    void uploadToPC();
+    void uploadToPC(int);
     void updateMenu();
     void powerToggle();
     void reduceBattery();
@@ -54,9 +55,10 @@ private:
 
     QTimer stopTimer;
     QTimer runTimer;
-    std::list<Session> sessions;
+    QList<Session> sessions;
 
     static const int size = MAX_SIZE;
+    PCWindow *pcWindow;
 };
 
 #endif // HANDHELDDEVICE_H

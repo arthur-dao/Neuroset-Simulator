@@ -2,27 +2,31 @@
 
 HandheldDevice::HandheldDevice(Headset* headset, int battery, QObject* parent)
 : QObject(parent), headset(headset), deviceStatus(ON), runStatus(INACTIVE),
-  batteryPercent(battery), contact(false), treatmentSig(false) {
+  batteryPercent(battery), contact(false), treatmentSig(false){
 
     // Initialize timers
     connect(&stopTimer, &QTimer::timeout, this, &HandheldDevice::shutdown);
     connect(&runTimer, &QTimer::timeout, this, &HandheldDevice::reduceBattery);
     runTimer.start(3000); // battery lasts 5min. battery is supposed to fully deplete every 2-3 treatments (29s per treatment)
 
-
+    pcWindow = new PCWindow();
+    pcWindow->hide();
 
     //temp sessions
     QList<Frequency> freq;
     Session s1(freq);
     Session s2(freq);
     Session s3(freq);
-    sessions.push_back(s1);
-    sessions.push_back(s2);
-    sessions.push_back(s3);
+
+    sessions.append(s1);
+    sessions.append(s2);
+    sessions.append(s3);
 
 }
 
-HandheldDevice::~HandheldDevice() {}
+HandheldDevice::~HandheldDevice() {
+
+}
 
 void HandheldDevice::createSession(){
     if (deviceStatus == OFF || batteryPercent <= 0) {
@@ -54,7 +58,7 @@ void HandheldDevice::beginSession() {
 //    emit sessionStarted();
 }
 
-list<Session> HandheldDevice::getSessions(){
+QList<Session> HandheldDevice::getSessions(){
     return sessions;
 }
 
@@ -112,23 +116,16 @@ void HandheldDevice::dateTimeSelection() {
     // ui component
 }
 
-//display session log is not really needed here, we just return it into main window
-//void HandheldDevice::displaySessionLog() {
-//    qDebug() << "Displaying session log...";
-//    // iterate session logs
-
-//    for(size_t i=0;i<sessions.size();i++){
-
-//    }
-//}
-
-
 void HandheldDevice::menuToggle() {
     qDebug() << "Menu toggled.";
 }
 
-void HandheldDevice::uploadToPC() {
+void HandheldDevice::uploadToPC(int index) {
     qDebug() << "Session data being prepared for upload to PC...";
+    Session sessionUpload = sessions.at(index);
+
+    pcWindow->newUpload(sessionUpload);
+    pcWindow->show();
 }
 
 void HandheldDevice::updateMenu() {

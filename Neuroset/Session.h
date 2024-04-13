@@ -3,24 +3,22 @@
 
 #include <QDateTime>
 #include <QList>
+#include <QDebug>
 #include "Frequency.h"
-#include "Headset.h"
 
 class Session {
 public:
-    Session();
+    Session(QList<Frequency>, QDateTime=QDateTime::currentDateTime(), QDateTime=QDateTime::currentDateTime().addSecs(300));
 
-    void startSession();
-
-    void setActiveElectrode(int electrodeIndex);
-    void addFrequency(float initial, float final);
-    void selectElectrode(int electrodeIndex);
+    QDateTime getStart();
+    QDateTime getEnd();
+    QList<Frequency> getFrequencies();
+    QString toString();
 
 private:
     QDateTime startDateTime;
     QDateTime endDateTime;
     QList<Frequency> frequencies;
-    Headset headset;
 };
 
 #endif // SESSION_H
