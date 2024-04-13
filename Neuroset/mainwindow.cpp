@@ -20,7 +20,7 @@ MainWindow::MainWindow(QWidget *parent)
     // Battery timer
     timeInterval = new QTimer(this);
     connect(timeInterval, &QTimer::timeout, this, &MainWindow::updateBattery);
-    timeInterval->start(3000);
+    timeInterval->start(3000);// battery lasts 5min. battery is supposed to fully deplete every 2-3 treatments (29s per treatment for testing)
 
     device = new HandheldDevice(headset, 100);
 
@@ -29,6 +29,11 @@ MainWindow::MainWindow(QWidget *parent)
     currMenu = MAIN;
     updateList();
     ui->tabWidget->setCurrentIndex(0);
+
+    //Adding eletrodes to combo box
+    for(int i = 0; i < headset->getElectrodeNum(); i++){
+        ui->electrodeCombo->addItem(QString("%2").arg(i + 1));
+    }
 
     // Connect UI signals to slots
     connect(ui->exitButton, &QPushButton::clicked, this, &MainWindow::close);
