@@ -7,7 +7,7 @@ HandheldDevice::HandheldDevice(Headset* headset, int battery, QObject* parent)
     // Initialize timers
     connect(&stopTimer, &QTimer::timeout, this, &HandheldDevice::shutdown);
     connect(&runTimer, &QTimer::timeout, this, &HandheldDevice::reduceBattery);
-    runTimer.start(3000); // battery lasts 5min. battery is supposed to fully deplete every 2-3 treatments (29s per treatment)
+    runTimer.start(3000); // battery lasts 5min. battery is supposed to fully deplete every 2-3 treatments (29s per treatment for testing)
 
     pcWindow = new PCWindow();
     pcWindow->hide();
@@ -54,7 +54,7 @@ void HandheldDevice::beginSession() {
         return;
     }
     qDebug() << "Session has begun.";
-    headset->startSimulation(500, 1);
+    headset->startSimulation(500);
 //    emit sessionStarted();
 }
 
@@ -66,10 +66,6 @@ void HandheldDevice::stop() {
     if (runStatus != ACTIVE && runStatus != PAUSED) {
         qDebug() << "No session is currently running or paused to stop.";
         return;
-    }
-
-    if (headset) {
-        headset->stopSimulation();
     }
 
     runStatus = INACTIVE;

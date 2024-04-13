@@ -14,11 +14,12 @@ SOURCES += \
     HandheldDevice.cpp \
     Headset.cpp \
     Session.cpp \
+    Waveform.cpp \
     main.cpp \
     mainwindow.cpp \
     pcwindow.cpp \
     qcustomplot.cpp \
-    qledlabel.cpp \
+    qledlabel.cpp
 
 HEADERS += \
     Electrode.h \
@@ -26,6 +27,7 @@ HEADERS += \
     HandheldDevice.h \
     Headset.h \
     Session.h \
+    Waveform.h \
     defs.h \
     mainwindow.h \
     pcwindow.h \

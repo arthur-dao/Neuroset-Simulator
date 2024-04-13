@@ -2,33 +2,26 @@
 #define ELECTRODE_H
 
 #include <vector>
-#include <cmath>
-#include <cstdlib>
+#include "Waveform.h"
 
-class Electrode{
+class Electrode {
+public:
+    Electrode(int siteNum);
+    ~Electrode();
 
-    public:
-        Electrode(int siteNum);
-        ~Electrode();
+    void applyLENS(int sampleRate, float durationSeconds, float offsetFrequency);
+    float calculateDominantFrequency();
+    std::vector<float> generateWaveform(int sampleRate, int durationSeconds);
+    std::vector<Band> getBands() const;
+    void updateBand(int index, float newFrequency);
 
-        std::vector<float> generateWaveform(int sampleRate, int durationSeconds);
-        float calculateBaseline();
-        void sendTreatment(float offsetFrequency, int duration, int intervals);
+    int getSiteNum() const { return siteNum; }
 
-        float getBaselineAverageBefore() const { return baselineAverageBefore; }
-        float getBaselineAverageAfter() const {return baselineAverageAfter; }
+private:
+    int siteNum;
+    Waveform waveform;
 
-
-    private:
-        int siteNum;
-        float baselineAverageBefore;
-        float baselineAverageAfter;
-
-        std::vector<float> frequencies;
-        std::vector<float> amplitudes;
-
-        std::vector<float> simulateEEGSignal(int sampleRate, int durationSeconds);
-        float generateSignalValue(float frequency, float amplitude, int sampleIndex, int sampleRate);
+    void initializeWaveform();
 };
 
 #endif // ELECTRODE_H

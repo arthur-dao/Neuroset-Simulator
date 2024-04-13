@@ -43,6 +43,9 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(ui->powerButton, &QPushButton::released, device, &HandheldDevice::powerToggle);
     connect(ui->electrodeCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(setActiveElectrodeIndex(int)));
+
+    connect(headset, &Headset::requestStop, device, &HandheldDevice::stop);
+
 }
 
 MainWindow::~MainWindow() {

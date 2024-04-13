@@ -1,36 +1,36 @@
 #include "Electrode.h"
 #include "QDebug"
 
-Electrode::Electrode(int siteNum)
-    : siteNum(siteNum), baselineAverageBefore(0.0f), baselineAverageAfter(0.0f) {
-    frequencies = {10.0f + siteNum * 0.2f, 20.0f + siteNum * 0.1f, 3.0f + siteNum * 0.05f, 40.0f + siteNum * 0.15f};
-    amplitudes = {1.0f, 0.5f + siteNum * 0.02f, 1.5f - siteNum * 0.01f, 0.3f + siteNum * 0.05f};
+Electrode::Electrode(int siteNum) : siteNum(siteNum) {
+    initializeWaveform();
 }
 
 Electrode::~Electrode() {}
 
+void Electrode::initializeWaveform() {
+    waveform.addBand(3.0 + siteNum * 0.05, 1.5 - siteNum * 0.01); // Delta
+    waveform.addBand(4.0 + siteNum * 0.05, 1.0); // Theta
+    waveform.addBand(10.0 + siteNum * 0.2, 1.0); // Alpha
+    waveform.addBand(20.0 + siteNum * 0.1, 0.5 + siteNum * 0.02); // Beta
+}
+
+float Electrode::calculateDominantFrequency() {
+    return waveform.calculateDominantFrequency();
+}
+
+void Electrode::applyLENS(int sampleRate, float durationSeconds, float offsetFrequency) {
+    waveform.applyLENS(sampleRate, durationSeconds, offsetFrequency);
+    waveform.generateSignal(sampleRate, durationSeconds);
+}
+
 std::vector<float> Electrode::generateWaveform(int sampleRate, int durationSeconds) {
-    return simulateEEGSignal(sampleRate, durationSeconds);
+    return waveform.generateSignal(sampleRate, durationSeconds);
 }
 
-std::vector<float> Electrode::simulateEEGSignal(int sampleRate, int durationSeconds) {
-    std::vector<float> signal(sampleRate * durationSeconds, 0.0f);
-    for (size_t i = 0; i < frequencies.size(); ++i) {
-        float frequency = frequencies[i];
-        float amplitude = amplitudes[i];
-        for (size_t j = 0; j < signal.size(); ++j) {
-            signal[j] += generateSignalValue(frequency, amplitude, j, sampleRate);
-        }
-    }
-    return signal;
+std::vector<Band> Electrode::getBands() const {
+    return waveform.getBands();
 }
 
-
-float Electrode::generateSignalValue(float frequency, float amplitude, int sampleIndex, int sampleRate) {
-    float t = static_cast<float>(sampleIndex) / sampleRate;
-    float value = amplitude * std::sin(2.0f * M_PI * frequency * t);
-
-    value += static_cast<float>(rand() % 100) / 500.0f;
-
-    return value;
+void Electrode::updateBand(int index, float newFrequency) {
+    waveform.updateBandFrequency(index, newFrequency);
 }
