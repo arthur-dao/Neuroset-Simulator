@@ -34,7 +34,7 @@ std::vector<float> Headset::calculateBaselines(int durationSeconds) {
         auto waveform = electrode.generateWaveform(sampleRate, durationSeconds);
         float freq = electrode.calculateDominantFrequency();
         baselineFrequencies.push_back(freq);
-        qDebug() << "Baseline frequency for electrode" << electrode.getSiteNum() << ":" << freq;
+        qDebug() << "Baseline frequency for electrode" << electrode.getSiteNum() + 1 << ":" << freq;
     }
 
     return baselineFrequencies;

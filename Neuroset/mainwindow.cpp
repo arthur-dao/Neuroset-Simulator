@@ -16,7 +16,6 @@ MainWindow::MainWindow(QWidget *parent)
     customPlot->addGraph();
 
     connect(headset, &Headset::waveformsUpdated, this, &MainWindow::updateGraph, Qt::DirectConnection);
-//    connect(headset, &Headset::stageCompleted, this, &MainWindow::handleStageCompleted);
 
     // Battery timer
     timeInterval = new QTimer(this);
@@ -30,6 +29,11 @@ MainWindow::MainWindow(QWidget *parent)
     currMenu = MAIN;
     updateList();
     ui->tabWidget->setCurrentIndex(0);
+
+    //Adding eletrodes to combo box
+    for(int i = 0; i < headset->getElectrodeNum(); i++){
+        ui->electrodeCombo->addItem(QString("%2").arg(i + 1));
+    }
 
     // Connect UI signals to slots
     connect(ui->exitButton, &QPushButton::clicked, this, &MainWindow::close);
