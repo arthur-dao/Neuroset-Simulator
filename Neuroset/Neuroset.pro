@@ -14,6 +14,7 @@ SOURCES += \
     HandheldDevice.cpp \
     Headset.cpp \
     Session.cpp \
+    TreatmentWorker.cpp \
     Waveform.cpp \
     main.cpp \
     mainwindow.cpp \
@@ -27,6 +28,7 @@ HEADERS += \
     HandheldDevice.h \
     Headset.h \
     Session.h \
+    TreatmentWorker.h \
     Waveform.h \
     defs.h \
     mainwindow.h \

@@ -3,7 +3,9 @@
 
 #include "defs.h"
 #include "Electrode.h"
+#include "TreatmentWorker.h"
 #include <vector>
+#include <QThread>
 #include <QObject>
 #include <QTimer>
 
@@ -16,29 +18,22 @@ public:
     void startSimulation(int sampleRate);
     void stopSimulation();
     std::vector<float> calculateBaselines(int durationSeconds);
-    void applyTreatmentToAllElectrodes();
-    void applyTreatmentToOneElectrode(int index);
-    void setActiveElectrode(int electrodeIndex);
+    void startConcurrentTreatment();
     const std::vector<float>& getActiveElectrodeWaveform(int activeElectrodeIndex) const;
-    void updateSingleElectrodeWaveform(int index);
+    void updateAllWaveforms();
 
 signals:
     void waveformsUpdated();
     void requestStop();
 
 private slots:
-    void updateAllWaveforms();
-    void handleTreatmentCompletion();
     void updateSimulationWaveforms();
 
 private:
     std::vector<Electrode> electrodes;
     std::vector<std::vector<float>> allWaveforms;
-    QTimer *treatmentTimer;
     QTimer *simulationTimer;
-    int activeElectrodeIndex;
     int sampleRate;
-    int durationSeconds;
     static const int NUM_ELECTRODES = MAX_SIZE;
 };
 

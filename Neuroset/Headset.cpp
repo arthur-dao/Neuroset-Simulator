@@ -3,7 +3,7 @@
 #include <QTimer>
 
 Headset::Headset(QObject *parent)
-    : QObject(parent), treatmentTimer(new QTimer(this)), simulationTimer(new QTimer(this)), activeElectrodeIndex(0) {
+    : QObject(parent), simulationTimer(new QTimer(this)), sampleRate(0) {
     electrodes.reserve(NUM_ELECTRODES);
     allWaveforms.resize(NUM_ELECTRODES);
 
@@ -11,21 +11,18 @@ Headset::Headset(QObject *parent)
         electrodes.emplace_back(Electrode(i));
     }
 
-    connect(treatmentTimer, &QTimer::timeout, this, &Headset::handleTreatmentCompletion);
     connect(simulationTimer, &QTimer::timeout, this, &Headset::updateSimulationWaveforms);
 }
 
 Headset::~Headset() {
-    delete treatmentTimer;
     delete simulationTimer;
 }
 
-void Headset::startSimulation(int sampleRate) {
-    this->sampleRate = sampleRate;
-    std::vector<float> baselineFrequencies = calculateBaselines(60); // 60 seconds for baseline generated instantly
-
-    qDebug() << "Baselines calculated. Starting treatment.";
-    applyTreatmentToAllElectrodes();
+void Headset::startSimulation(int rate) {
+    this->sampleRate = rate;
+    std::vector<float> baselineFrequencies = calculateBaselines(60);
+    qDebug() << "Baselines calculated. Starting concurrent treatment.";
+    startConcurrentTreatment();
     simulationTimer->start(1000 / 16);
 }
 
@@ -43,54 +40,22 @@ std::vector<float> Headset::calculateBaselines(int durationSeconds) {
     return baselineFrequencies;
 }
 
-void Headset::applyTreatmentToAllElectrodes() {
-    activeElectrodeIndex = 0;
-    applyTreatmentToOneElectrode(activeElectrodeIndex);
-}
-
-void Headset::applyTreatmentToOneElectrode(int index) {
-    if (index < NUM_ELECTRODES) {
-        qDebug() << "Starting treatment for electrode" << index;
-        const float lensTreatmentDurationSeconds = 1.0f; // Treatment lasts for 1 second
-        const float lensOffsetFrequency = 5.0f; // Frequency offset applied during LENS treatment
-
-        electrodes[index].applyLENS(sampleRate, lensTreatmentDurationSeconds, lensOffsetFrequency);
-        treatmentTimer->start(1000 / 16);  // Trigger recalculation every 1/16 second within the 1-second treatment
-    } else {
-        qDebug() << "All electrodes treated.";
-        stopSimulation();
+void Headset::startConcurrentTreatment() {
+    for (auto& electrode : electrodes) {
+        QThread* thread = new QThread;
+        TreatmentWorker* worker = new TreatmentWorker(&electrode, sampleRate);
+        worker->moveToThread(thread);
+        connect(thread, &QThread::started, worker, &TreatmentWorker::process);
+        connect(worker, &TreatmentWorker::finished, thread, &QThread::quit);
+        connect(worker, &TreatmentWorker::finished, worker, &TreatmentWorker::deleteLater);
+        connect(thread, &QThread::finished, thread, &QThread::deleteLater);
+        thread->start();
     }
 }
 
-void Headset::handleTreatmentCompletion() {
-    static int timesCalled = 0;
-    timesCalled++;
-
-    if (timesCalled < 16) {
-        electrodes[activeElectrodeIndex].applyLENS(sampleRate, 1.0f / 16, 5.0f);
-        updateSingleElectrodeWaveform(activeElectrodeIndex);
-        emit waveformsUpdated();
-    } else {
-        // After 16 calls (1 second), move to the next electrode
-        timesCalled = 0;
-        treatmentTimer->stop();
-        activeElectrodeIndex++;
-        if (activeElectrodeIndex < NUM_ELECTRODES) {
-            applyTreatmentToOneElectrode(activeElectrodeIndex);
-        } else {
-            calculateBaselines(1);
-            qDebug() << "Completed treatment for all electrodes.";
-            stopSimulation();
-        }
-    }
+const std::vector<float>& Headset::getActiveElectrodeWaveform(int activeElectrodeIndex) const {
+    return allWaveforms[activeElectrodeIndex];
 }
-
-void Headset::updateSingleElectrodeWaveform(int index) {
-    if (index >= 0 && index < static_cast<int>(electrodes.size())) {
-        allWaveforms[index] = electrodes[index].generateWaveform(sampleRate, 1);
-    }
-}
-
 
 void Headset::updateAllWaveforms() {
     for (size_t i = 0; i < electrodes.size(); ++i) {
@@ -99,29 +64,15 @@ void Headset::updateAllWaveforms() {
     emit waveformsUpdated();
 }
 
-void Headset::setActiveElectrode(int electrodeIndex) {
-    if (electrodeIndex >= 0 && static_cast<size_t>(electrodeIndex) < electrodes.size()) {
-        activeElectrodeIndex = electrodeIndex;
-        qDebug() << "Active electrode set to:" << electrodeIndex;
+void Headset::updateSimulationWaveforms() {
+    for (auto& electrode : electrodes) {
+        allWaveforms[electrode.getSiteNum()] = electrode.generateWaveform(sampleRate, 1);
     }
-}
-
-const std::vector<float>& Headset::getActiveElectrodeWaveform(int activeElectrodeIndex) const {
-    return allWaveforms[activeElectrodeIndex];
+    emit waveformsUpdated();
 }
 
 void Headset::stopSimulation() {
-    treatmentTimer->stop();
     simulationTimer->stop();
     emit requestStop();
     emit waveformsUpdated();
 }
-
-void Headset::updateSimulationWaveforms() {
-    int updateDurationSeconds = 1;
-    for (size_t i = 0; i < electrodes.size(); ++i) {
-        allWaveforms[i] = electrodes[i].generateWaveform(sampleRate, updateDurationSeconds);
-    }
-    emit waveformsUpdated();
-}
-

@@ -48,5 +48,6 @@ private slots:
     void navigateDown();
     void select();
     void back();
+
 };
 #endif // MAINWINDOW_H
