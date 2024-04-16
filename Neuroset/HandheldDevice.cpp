@@ -24,9 +24,7 @@ HandheldDevice::HandheldDevice(Headset* headset, int battery, QObject* parent)
 
 }
 
-HandheldDevice::~HandheldDevice() {
-
-}
+HandheldDevice::~HandheldDevice() {}
 
 void HandheldDevice::createSession(){
     if (deviceStatus == OFF || batteryPercent <= 0) {
@@ -70,6 +68,7 @@ void HandheldDevice::stop() {
 
     runStatus = INACTIVE;
     qDebug() << "Session and simulation stopped.";
+    emit stopHeadset();
 }
 
 void HandheldDevice::pause() {

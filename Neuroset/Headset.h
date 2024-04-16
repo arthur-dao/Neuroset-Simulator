@@ -12,16 +12,19 @@
 class Headset : public QObject {
     Q_OBJECT
 
+public slots:
+    void stopSimulation();
+
 public:
     explicit Headset(QObject *parent = nullptr);
     ~Headset();
     int getElectrodeNum() { return NUM_ELECTRODES; }
     void startSimulation(int sampleRate);
-    void stopSimulation();
     std::vector<float> calculateBaselines(int durationSeconds);
     void startConcurrentTreatment();
     const std::vector<float>& getActiveElectrodeWaveform(int activeElectrodeIndex) const;
     void updateAllWaveforms();
+    void manageStages();
 
 signals:
     void waveformsUpdated();
@@ -34,8 +37,11 @@ private:
     std::vector<Electrode> electrodes;
     std::vector<std::vector<float>> allWaveforms;
     QTimer *simulationTimer;
+    std::vector<QThread*> activeThreads;
     int sampleRate;
     static const int NUM_ELECTRODES = MAX_SIZE;
+    int currentStage = 0;
+    const int totalStages = 5;
 };
 
 #endif // HEADSET_H

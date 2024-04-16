@@ -20,7 +20,7 @@ float Electrode::calculateDominantFrequency() {
 
 void Electrode::applyLENS(int sampleRate, float durationSeconds, float offsetFrequency) {
     waveform.applyLENS(sampleRate, durationSeconds, offsetFrequency);
-    waveform.generateSignal(sampleRate, durationSeconds);
+//    waveform.generateSignal(sampleRate, durationSeconds);
 }
 
 std::vector<float> Electrode::generateWaveform(int sampleRate, int durationSeconds) {

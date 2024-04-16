@@ -43,6 +43,7 @@ public slots:
 signals:
     void sessionStarted();
     void sessionStopped();
+    void stopHeadset();
 
 private:
     Headset* headset;

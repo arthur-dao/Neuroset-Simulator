@@ -32,31 +32,14 @@ float Waveform::calculateDominantFrequency() {
 }
 
 void Waveform::applyLENS(int sampleRate, float durationSeconds, float offsetFrequency) {
-    // Apply LENS treatment, recalculating the dominant frequency every 1/16 second
-    float treatmentFrequency = calculateDominantFrequency();
     int lensIterations = static_cast<int>(sampleRate * durationSeconds);
-    int updatesPerSecond = 16;
+    int updatesPerSecond = 1;
     int updateInterval = sampleRate / updatesPerSecond;
 
     for (int i = 0; i < lensIterations; ++i) {
         if (i % updateInterval == 0) {
-            // Recalculate the dominant frequency and apply the offset
-            treatmentFrequency = calculateDominantFrequency();
-            treatmentFrequency += offsetFrequency;
-
-            // Update the band frequency which is currently dominant
-            int dominantBandIndex = -1;
-            float maxAmplitudeSquared = 0.0f;
-            for (size_t j = 0; j < bands.size(); ++j) {
-                float currentAmplitudeSquared = bands[j].amplitude * bands[j].amplitude;
-                if (currentAmplitudeSquared > maxAmplitudeSquared) {
-                    maxAmplitudeSquared = currentAmplitudeSquared;
-                    dominantBandIndex = j;
-                }
-            }
-
-            if (dominantBandIndex != -1) {
-                bands[dominantBandIndex].frequency = treatmentFrequency;
+            for (auto& band : bands) {
+                band.frequency += offsetFrequency;
             }
         }
     }

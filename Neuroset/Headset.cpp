@@ -15,16 +15,48 @@ Headset::Headset(QObject *parent)
 }
 
 Headset::~Headset() {
+    stopSimulation();
     delete simulationTimer;
 }
 
 void Headset::startSimulation(int rate) {
     this->sampleRate = rate;
-    std::vector<float> baselineFrequencies = calculateBaselines(60);
-    qDebug() << "Baselines calculated. Starting concurrent treatment.";
-    startConcurrentTreatment();
-    simulationTimer->start(1000 / 16);
+    manageStages();
 }
+
+void Headset::manageStages() {
+    if (currentStage < 4) {
+        // Wait for 5 seconds before starting the baseline calculation for stage
+        QTimer::singleShot(5000, this, [this]() {
+            qDebug() << "Calculating baseline for stage" << currentStage + 1;
+            std::vector<float> baselineFrequencies = calculateBaselines(5);
+            qDebug() << "Baseline calculated for stage" << currentStage + 1;
+
+            qDebug() << "Starting concurrent treatment for stage" << currentStage + 1;
+            startConcurrentTreatment();
+            simulationTimer->start(1000 / 16); // update 1/16
+
+            // 1s before next stage
+            QTimer::singleShot(1000, this, [this]() {
+                currentStage++;
+                manageStages();  // recursion!
+            });
+        });
+    } else if (currentStage == 4) {
+        // Wait for 5 seconds before starting the final baseline calculation
+        QTimer::singleShot(5000, this, [this]() {
+            qDebug() << "Calculating final 5-second baseline";
+            std::vector<float> baselineFrequencies = calculateBaselines(5);
+            qDebug() << "Final baseline calculated";
+
+            QTimer::singleShot(5000, this, [this]() {
+                qDebug() << "Final stage complete, stopping simulation.";
+                stopSimulation();
+            });
+        });
+    }
+}
+
 
 std::vector<float> Headset::calculateBaselines(int durationSeconds) {
     std::vector<float> baselineFrequencies;
