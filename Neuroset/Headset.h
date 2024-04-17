@@ -42,6 +42,7 @@ private:
     static const int NUM_ELECTRODES = MAX_SIZE;
     int currentStage = 0;
     const int totalStages = 5;
+    Status status;
 };
 
 #endif // HEADSET_H

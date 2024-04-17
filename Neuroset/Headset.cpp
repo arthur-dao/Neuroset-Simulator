@@ -10,7 +10,7 @@ Headset::Headset(QObject *parent)
     for (int i = 0; i < NUM_ELECTRODES; i++) {
         electrodes.emplace_back(Electrode(i));
     }
-
+    status = DISCONNECT;
     connect(simulationTimer, &QTimer::timeout, this, &Headset::updateSimulationWaveforms);
 }
 
@@ -21,14 +21,22 @@ Headset::~Headset() {
 
 void Headset::startSimulation(int rate) {
     this->sampleRate = rate;
+    status = CONNECT;
     manageStages();
 }
 
 void Headset::manageStages() {
     if (currentStage < 4) {
         // Wait for 5 seconds before starting the baseline calculation for stage
+        qDebug() << "Calculating baseline for stage" << currentStage + 1;
         QTimer::singleShot(5000, this, [this]() {
-            qDebug() << "Calculating baseline for stage" << currentStage + 1;
+
+            //If the session's been stopped
+            if(status == STOP){
+                status = DISCONNECT;
+                return;
+            }
+
             std::vector<float> baselineFrequencies = calculateBaselines(5);
             qDebug() << "Baseline calculated for stage" << currentStage + 1;
 
@@ -44,8 +52,12 @@ void Headset::manageStages() {
         });
     } else if (currentStage == 4) {
         // Wait for 5 seconds before starting the final baseline calculation
+        qDebug() << "Calculating final 5-second baseline";
         QTimer::singleShot(5000, this, [this]() {
-            qDebug() << "Calculating final 5-second baseline";
+            if(status == DISCONNECT){
+                qInfo("Headset has been disconnected");
+                return;
+            }
             std::vector<float> baselineFrequencies = calculateBaselines(5);
             qDebug() << "Final baseline calculated";
 
@@ -104,6 +116,8 @@ void Headset::updateSimulationWaveforms() {
 }
 
 void Headset::stopSimulation() {
+    currentStage = 0;
+    status = STOP;
     simulationTimer->stop();
     emit requestStop();
     emit waveformsUpdated();

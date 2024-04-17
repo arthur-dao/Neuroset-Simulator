@@ -68,7 +68,7 @@ void HandheldDevice::stop() {
 
     runStatus = INACTIVE;
     qDebug() << "Session and simulation stopped.";
-    emit stopHeadset();
+    headset->stopSimulation();
 }
 
 void HandheldDevice::pause() {
