@@ -155,12 +155,35 @@ void HandheldDevice::chargeBatteryToFull() { //link this to some button i guess
     qDebug() << "Battery fully charged.";
 }
 
-void HandheldDevice::disconnect() {
-    if (deviceStatus == ON && (runStatus == ACTIVE || runStatus == PAUSED)) {
+bool HandheldDevice::disconnect() {
+    if (runStatus == ACTIVE || runStatus == PAUSED) {
         runStatus = DISCONNECTED;
+        stop();
         qDebug() << "Device disconnected. Awaiting reconnection...";
         // reconnect type shi
+
+        return true;
     }
+
+    return false;
 }
 
+bool HandheldDevice::reconnect() {
+    if (runStatus == DISCONNECTED) {
+        runStatus = INACTIVE;
+        qDebug() << "Device reconnected.";
+        
+        return true;
+    }
+
+    return false;
+}
+
+void HandheldDevice::connectionToggle() {
+    if (deviceStatus == ON && runStatus != INACTIVE) {
+        (runStatus == DISCONNECTED ? reconnect() : disconnect());
+    } else {
+        qDebug() << "Cannot toggle connection: Device is" << (deviceStatus == OFF ? "off." : (runStatus == INACTIVE ? "inactive." : "???."));
+    }
+}
 

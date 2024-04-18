@@ -38,7 +38,9 @@ public slots:
     void powerToggle();
     void reduceBattery();
     void chargeBatteryToFull();
-    void disconnect();
+    bool disconnect();
+    bool reconnect();
+    void connectionToggle();
 
 signals:
     void sessionStarted();
