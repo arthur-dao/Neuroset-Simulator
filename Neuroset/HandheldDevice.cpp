@@ -61,8 +61,8 @@ QList<Session> HandheldDevice::getSessions(){
 }
 
 void HandheldDevice::stop() {
-    if (runStatus != ACTIVE && runStatus != PAUSED) {
-        qDebug() << "No session is currently running or paused to stop.";
+    if (runStatus == INACTIVE || runStatus == DISCONNECTED) {
+        qDebug() << "No session is currently running to stop.";
         return;
     }
 
@@ -76,6 +76,7 @@ void HandheldDevice::pause() {
         qDebug() << "No active session to pause.";
         return;
     }
+
     runStatus = PAUSED;
     qDebug() << "Session paused.";
 }
@@ -92,16 +93,13 @@ void HandheldDevice::resume() {
     if (runStatus == INACTIVE) {
         qDebug() << "No active session found. Starting a new session.";
         createSession();
-    }
-    else if (runStatus == PAUSED) {
+    } else if (runStatus == PAUSED) {
         runStatus = ACTIVE;
         qDebug() << "Session resumed.";
         //resume type shi
-    }
-    else if (runStatus == ACTIVE) {
+    } else if (runStatus == ACTIVE) {
         qDebug() << "Session is already active.";
-    }
-    else {
+    } else {
         qDebug() << "Session cannot be resumed due to unexpected state.";
     }
 }
@@ -157,8 +155,8 @@ void HandheldDevice::chargeBatteryToFull() { //link this to some button i guess
 
 bool HandheldDevice::disconnect() {
     if (runStatus == ACTIVE || runStatus == PAUSED) {
-        runStatus = DISCONNECTED;
         stop();
+        runStatus = DISCONNECTED;
         qDebug() << "Device disconnected. Awaiting reconnection...";
         // reconnect type shi
 
@@ -171,7 +169,8 @@ bool HandheldDevice::disconnect() {
 bool HandheldDevice::reconnect() {
     if (runStatus == DISCONNECTED) {
         runStatus = INACTIVE;
-        qDebug() << "Device reconnected.";
+        resume();
+        qDebug() << "Device reconnected. Resuming operations.";
         
         return true;
     }

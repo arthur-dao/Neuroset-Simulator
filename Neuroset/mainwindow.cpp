@@ -118,7 +118,7 @@ void MainWindow::select(){
     if(currMenu == MAIN){
         if(currentIndex == 0){
             ui->tabWidget->setCurrentIndex(1);
-            device->beginSession();
+            device->createSession();
         }
         else if(currentIndex == 1){
             currMenu = SESSIONS;
