@@ -16,6 +16,7 @@ MainWindow::MainWindow(QWidget *parent)
     customPlot->addGraph();
 
     connect(headset, &Headset::waveformsUpdated, this, &MainWindow::updateGraph, Qt::DirectConnection);
+    connect(headset, &Headset::updateProgress, this, &MainWindow::updateProgress, Qt::DirectConnection);
 
     // Battery timer
     timeInterval = new QTimer(this);
@@ -29,6 +30,7 @@ MainWindow::MainWindow(QWidget *parent)
     currMenu = MAIN;
     updateList();
     ui->tabWidget->setCurrentIndex(0);
+    ui->progressBar->setValue(0);
 
     //Adding eletrodes to combo box
     for(int i = 0; i < headset->getElectrodeNum(); i++){
@@ -164,4 +166,11 @@ void MainWindow::updateList(){
     else if(currMenu == SETDATETIME){
 
     }
+}
+
+void MainWindow::updateProgress(){
+    int stage = headset->getStage();
+    double percentage = static_cast<double>(stage) / 4 * 100;
+    QString value = QString::number(percentage);
+    ui->progressBar->setValue(static_cast<int>(percentage));
 }

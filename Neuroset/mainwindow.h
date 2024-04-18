@@ -49,5 +49,7 @@ private slots:
     void select();
     void back();
 
+    void updateProgress();
+
 };
 #endif // MAINWINDOW_H

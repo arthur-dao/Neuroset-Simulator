@@ -19,6 +19,7 @@ public:
     explicit Headset(QObject *parent = nullptr);
     ~Headset();
     int getElectrodeNum() { return NUM_ELECTRODES; }
+    int getStage() { return currentStage; }
     void startSimulation(int sampleRate);
     std::vector<float> calculateBaselines(int durationSeconds);
     void startConcurrentTreatment();
@@ -29,6 +30,7 @@ public:
 signals:
     void waveformsUpdated();
     void requestStop();
+    void updateProgress();
 
 private slots:
     void updateSimulationWaveforms();
