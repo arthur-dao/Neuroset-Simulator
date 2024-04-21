@@ -37,6 +37,7 @@ HandheldDevice::~HandheldDevice() {}
 void HandheldDevice::createSession(){
     if (deviceStatus == OFF || batteryPercent <= 0) {
         qDebug() << "Cannot start session: Device is off or battery is low.";
+        shutdown();
         return;
     }
     runStatus = ACTIVE;
