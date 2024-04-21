@@ -8,6 +8,7 @@
 #include <QThread>
 #include <QObject>
 #include <QTimer>
+#include <QDateTime>
 
 class Headset : public QObject {
     Q_OBJECT
@@ -26,6 +27,7 @@ public:
     const std::vector<float>& getActiveElectrodeWaveform(int activeElectrodeIndex) const;
     void updateAllWaveforms();
     void manageStages();
+    void setCurrSessionTime(QDateTime);
 
 signals:
     void waveformsUpdated();
@@ -45,6 +47,8 @@ private:
     int currentStage = 0;
     const int totalStages = 5;
     Status status;
+    QDateTime currSessionTime;
+
 };
 
 #endif // HEADSET_H

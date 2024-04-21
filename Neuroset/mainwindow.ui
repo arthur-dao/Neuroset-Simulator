@@ -97,7 +97,7 @@
      <enum>Qt::RightToLeft</enum>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="tab">
      <attribute name="title">
@@ -114,6 +114,16 @@
       </property>
       <property name="layoutDirection">
        <enum>Qt::LeftToRight</enum>
+      </property>
+     </widget>
+     <widget class="QDateTimeEdit" name="sessionTimeEdit">
+      <property name="geometry">
+       <rect>
+        <x>7</x>
+        <y>10</y>
+        <width>211</width>
+        <height>26</height>
+       </rect>
       </property>
      </widget>
     </widget>
@@ -206,8 +216,8 @@
      <rect>
       <x>20</x>
       <y>280</y>
-      <width>141</width>
-      <height>51</height>
+      <width>168</width>
+      <height>58</height>
      </rect>
     </property>
     <layout class="QGridLayout" name="MenuControls">
@@ -246,7 +256,7 @@
      <rect>
       <x>450</x>
       <y>270</y>
-      <width>141</width>
+      <width>156</width>
       <height>31</height>
      </rect>
     </property>

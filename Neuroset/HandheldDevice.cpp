@@ -14,6 +14,10 @@ HandheldDevice::HandheldDevice(Headset* headset, int battery, QObject* parent)
 
     //temp sessions
     QList<Frequency> freq;
+    Frequency f(1,2);
+    Frequency f2(3,4);
+    freq.append(f);
+    freq.append(f2);
     Session s1(freq);
     Session s2(freq);
     Session s3(freq);

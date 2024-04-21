@@ -15,6 +15,8 @@ MainWindow::MainWindow(QWidget *parent)
     layout->addWidget(customPlot);
     customPlot->addGraph();
 
+    ui->sessionTimeEdit->hide();
+
     connect(headset, &Headset::waveformsUpdated, this, &MainWindow::updateGraph, Qt::DirectConnection);
     connect(headset, &Headset::updateProgress, this, &MainWindow::updateProgress, Qt::DirectConnection);
 
@@ -164,6 +166,15 @@ void MainWindow::updateList(){
 
     }
     else if(currMenu == SETDATETIME){
+//        ui->sessionTimeEdit->show();
+//        QDateTime sessionStart;
+//        sessionStart = ui->sessionTimeEdit->dateTime();
+//        qDebug() << "hi";
+//        //menuSelection->addItem()
+//        QListWidgetItem item = QListWidgetItem(menuSelection);
+//        item.setSizeHint(sessionSet.sizeHint());
+//        menuSelection->addItem(&item);
+//        menuSelection->setItemWidget(&item, &sessionSet);
 
     }
 }

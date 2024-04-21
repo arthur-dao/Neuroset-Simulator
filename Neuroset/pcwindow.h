@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include "Session.h"
+#include "Frequency.h"
 
 namespace Ui {
 class PCWindow;
