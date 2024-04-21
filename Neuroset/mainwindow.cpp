@@ -24,6 +24,10 @@ MainWindow::MainWindow(QWidget *parent)
     customPlot->yAxis->setLabel("Amplitude");
 
 
+    //Set session time
+    ui->sessionTimeEdit->hide();
+    ui->sessionTimeEdit->setCalendarPopup(true);
+
     connect(headset, &Headset::waveformsUpdated, this, &MainWindow::updateGraph, Qt::DirectConnection);
     connect(headset, &Headset::updateProgress, this, &MainWindow::updateProgress, Qt::DirectConnection);
 
@@ -152,6 +156,10 @@ void MainWindow::select(){
     else if(currMenu == SESSIONS){
         device->uploadToPC(currentIndex);
     }
+    else if(currMenu == SETDATETIME){
+        setDateTime();
+    }
+
 }
 
 void MainWindow::back(){
@@ -166,7 +174,7 @@ void MainWindow::back(){
 
 void MainWindow::updateList(){
     menuSelection->clear();
-
+    ui->sessionTimeEdit->hide();
     if(currMenu == MAIN){
         new QListWidgetItem(tr("Start Session"), menuSelection);
         new QListWidgetItem(tr("Session Log"), menuSelection);
@@ -174,6 +182,9 @@ void MainWindow::updateList(){
     }
     else if(currMenu == SESSIONS){
         int n = 1;
+        if(device->getSessions().isEmpty()){
+            new QListWidgetItem(tr("There are no sessions saved"), menuSelection);
+        }
         for(Session s : device->getSessions()){
             QString row = "SESSION #" + QString::number(n) + ": " + s.getStart().toString() + " - " + s.getEnd().toString();
             new QListWidgetItem(row, menuSelection);
@@ -182,8 +193,13 @@ void MainWindow::updateList(){
 
     }
     else if(currMenu == SETDATETIME){
-
+        ui->sessionTimeEdit->show();
     }
+}
+
+void MainWindow::setDateTime(){
+    QDateTime sessionStart = ui->sessionTimeEdit->dateTime();
+    device->getHeadset()->setCurrSessionTime(sessionStart);
 }
 
 void MainWindow::updateProgress(){

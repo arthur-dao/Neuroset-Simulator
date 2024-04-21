@@ -15,14 +15,18 @@ HandheldDevice::HandheldDevice(Headset* headset, int battery, QObject* parent)
     pcWindow->hide();
 
     //temp sessions
-    QList<Frequency> freq;
-    Session s1(freq);
-    Session s2(freq);
-    Session s3(freq);
+//    QList<Frequency> freq;
+//    Frequency f(1,2);
+//    Frequency f2(3,4);
+//    freq.append(f);
+//    freq.append(f2);
+//    Session s1(freq);
+//    Session s2(freq);
+//    Session s3(freq);
 
-    sessions.append(s1);
-    sessions.append(s2);
-    sessions.append(s3);
+//    sessions.append(s1);
+//    sessions.append(s2);
+//    sessions.append(s3);
 
 }
 
@@ -192,6 +196,11 @@ void HandheldDevice::connectionToggle() {
     } else {
         qDebug() << "Cannot toggle connection: Device is" << (deviceStatus == OFF ? "off." : (runStatus == INACTIVE ? "inactive." : "???."));
     }
+}
+
+
+Headset* HandheldDevice::getHeadset(){
+    return headset;
 }
 
 void HandheldDevice::updateRunStatus(RunStatus runStatus) {

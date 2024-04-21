@@ -8,6 +8,7 @@
 #include <QThread>
 #include <QObject>
 #include <QTimer>
+#include <QDateTime>
 
 class Headset : public QObject {
     Q_OBJECT
@@ -27,7 +28,12 @@ public:
     void startConcurrentTreatment();
     const std::vector<float>& getActiveElectrodeWaveform(int activeElectrodeIndex) const;
     void updateAllWaveforms();
+
+    void manageStages();
+    void setCurrSessionTime(QDateTime);
+
     RunStatus getCurrentRunStatus() const { return currentRunStatus; }
+
 
 signals:
     void waveformsUpdated();
@@ -53,9 +59,13 @@ private:
     int currentStage = 0;
     const int totalStages = 5;
     Status status;
+
+    QDateTime currSessionTime;
+
     RunStatus currentRunStatus;
     void manageStages();
     bool waitingForResume = false;
+
 };
 
 #endif // HEADSET_H

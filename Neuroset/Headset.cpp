@@ -12,6 +12,7 @@ Headset::Headset(QObject *parent)
     }
     status = DISCONNECT;
     connect(simulationTimer, &QTimer::timeout, this, &Headset::updateSimulationWaveforms);
+    currSessionTime = QDateTime::currentDateTime();
 }
 
 Headset::~Headset() {
@@ -168,4 +169,8 @@ void Headset::onRunStatusChanged(RunStatus status) {
         waitingForResume = false;
         manageStages();
     }
+}
+
+void Headset::setCurrSessionTime(QDateTime newDateTime){
+    currSessionTime = newDateTime;
 }
