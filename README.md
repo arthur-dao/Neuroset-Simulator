@@ -16,6 +16,7 @@ Hugh:
   - Stop implementation
   - Progress bar implementation
   - Assisted with logic flow control and design
+  - Testing and bug fixing
 
 Taseen:
 
