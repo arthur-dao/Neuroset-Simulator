@@ -33,6 +33,8 @@ public:
     void manageStages();
     void setCurrSessionTime(QDateTime);
 
+    QTimer* getSimulationTimer() {return simulationTimer; };
+
     RunStatus getCurrentRunStatus() const { return currentRunStatus; }
 
 
@@ -66,7 +68,6 @@ private:
     QDateTime currSessionTime;
 
     RunStatus currentRunStatus;
-    void manageStages();
     bool waitingForResume = false;
 
 };

@@ -175,6 +175,7 @@ bool HandheldDevice::disconnect() {
         pause();
         runStatus = DISCONNECTED;
         headset->contactLostStart();
+        headset->getSimulationTimer()->stop();
         qDebug() << "Device disconnected. Awaiting reconnection...";
         // reconnect type shi
         updateRunStatus(runStatus);
@@ -189,6 +190,7 @@ bool HandheldDevice::reconnect() {
         runStatus = INACTIVE;
         qDebug() << "Device reconnected.";
         headset->contactLostEnd();
+        headset->getSimulationTimer()->start(1000 / 16);
         updateRunStatus(runStatus);
         return true;
     }
