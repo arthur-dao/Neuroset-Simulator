@@ -24,4 +24,8 @@ void PCWindow::displaySessions(QList<Session> sessions){
 
 void PCWindow::newUpload(Session newSession){
     ui->textBrowser->append(newSession.toString());
+//    QList<Frequency> list = newSession.getFrequencies();
+//    for(Frequency f : list){
+//        ui->textBrowser->append("Initial: " + QString::number(f.getInitialFrequency()) + " - Final: " +  QString::number(f.getFinalFrequency()));
+//    }
 }

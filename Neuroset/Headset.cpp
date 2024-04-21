@@ -13,6 +13,7 @@ Headset::Headset(QObject *parent)
     }
     status = DISCONNECT;
     connect(simulationTimer, &QTimer::timeout, this, &Headset::updateSimulationWaveforms);
+    currSessionTime = QDateTime::currentDateTime();
 }
 
 Headset::~Headset() {
@@ -21,6 +22,7 @@ Headset::~Headset() {
 }
 
 void Headset::startSimulation(int rate) {
+    emit sessionStart();
     this->sampleRate = rate;
     status = CONNECT;
     manageStages();
@@ -28,6 +30,11 @@ void Headset::startSimulation(int rate) {
 
 void Headset::manageStages() {
     static QList<Frequency> sessionFrequencySets;
+    if (currentRunStatus == PAUSED) {
+        qDebug() << "Session is paused. Waiting to resume.";
+        waitingForResume = true;
+        return;
+    }
 
     if (currentStage < 4) {
         // Wait for 5 seconds before starting the baseline calculation for stage
@@ -41,6 +48,16 @@ void Headset::manageStages() {
                 return;
             }
 
+            if (getCurrentRunStatus() == PAUSED) {
+                emit updateProgress();
+                qDebug() << "Session is paused. Waiting to resume before final calculations.";
+                return;
+            } else if (getCurrentRunStatus() == DISCONNECTED) {
+                emit updateProgress();
+                qDebug() << "Headset disconnected.";
+                return;
+            }
+
             std::vector<float> baselineFrequencies = calculateBaselines(5);
             qDebug() << "Baseline calculated for stage" << currentStage + 1;
 
@@ -50,6 +67,8 @@ void Headset::manageStages() {
             }
 
             qDebug() << "Starting concurrent treatment for stage" << currentStage + 1;
+            emit treatmentStart();
+            qDebug() << "Processing input waveform and delivering feedback...";
             startConcurrentTreatment();
             simulationTimer->start(1000 / 16); // update 1/16
 
@@ -58,6 +77,7 @@ void Headset::manageStages() {
             QTimer::singleShot(1000, this, [this]() {
                 currentStage++;
                 manageStages();  // recursion!
+                emit treatmentEnd();
             });
         });
     } else if (currentStage == 4) {
@@ -71,8 +91,13 @@ void Headset::manageStages() {
                 return;
             }
 
-            if(status == DISCONNECT){
-                qInfo("Headset has been disconnected");
+            if (getCurrentRunStatus() == PAUSED) {
+                emit updateProgress();
+                qDebug() << "Session is paused. Waiting to resume before final calculations.";
+                return;
+            } else if (getCurrentRunStatus() == DISCONNECTED) {
+                emit updateProgress();
+                qDebug() << "Headset disconnected.";
                 return;
             }
 
@@ -96,6 +121,7 @@ void Headset::manageStages() {
             QTimer::singleShot(5000, this, [this]() {
                 emit updateProgress();
                 qDebug() << "Final stage complete, stopping simulation.";
+                emit sessionEnd();
                 stopSimulation();
             });
         });
@@ -153,4 +179,18 @@ void Headset::stopSimulation() {
     simulationTimer->stop();
     emit requestStop();
     emit waveformsUpdated();
+    emit sessionEnd();
+}
+
+void Headset::onRunStatusChanged(RunStatus status) {
+    currentRunStatus = status;
+    if (status == ACTIVE && waitingForResume) {
+        qDebug() << "Resuming stages after pause.";
+        waitingForResume = false;
+        manageStages();
+    }
+}
+
+void Headset::setCurrSessionTime(QDateTime newDateTime){
+    currSessionTime = newDateTime;
 }

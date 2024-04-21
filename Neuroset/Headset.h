@@ -9,12 +9,15 @@
 #include <QThread>
 #include <QObject>
 #include <QTimer>
+#include <QDateTime>
 
 class Headset : public QObject {
     Q_OBJECT
 
 public slots:
     void stopSimulation();
+    void onRunStatusChanged(RunStatus runStatus);
+
 
 public:
     explicit Headset(QObject *parent = nullptr);
@@ -26,13 +29,24 @@ public:
     void startConcurrentTreatment();
     const std::vector<float>& getActiveElectrodeWaveform(int activeElectrodeIndex) const;
     void updateAllWaveforms();
+
     void manageStages();
+    void setCurrSessionTime(QDateTime);
+
+    RunStatus getCurrentRunStatus() const { return currentRunStatus; }
+
 
 signals:
     void waveformsUpdated();
     void requestStop();
     void updateProgress();
     void sendSession(const Session& session);
+    void treatmentStart();
+    void treatmentEnd();
+    void sessionStart();
+    void sessionEnd();
+    void contactLostStart();
+    void contactLostEnd();
 
 private slots:
     void updateSimulationWaveforms();
@@ -48,6 +62,12 @@ private:
     const int totalStages = 5;
     Status status;
     std::vector<float> initialFrequencies; // Store initial frequencies
+
+    QDateTime currSessionTime;
+
+    RunStatus currentRunStatus;
+    void manageStages();
+    bool waitingForResume = false;
 
 };
 

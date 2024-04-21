@@ -38,6 +38,7 @@ private:
     CurrentMenu currMenu;
 
     void updateList();
+    void setDateTime();
 
 private slots:
     void updateBattery();

@@ -1,24 +1,34 @@
-#ifndef QLEDLABEL_H
-#define QLEDLABEL_H
-
 #include <QLabel>
+#include <QTimer>
 
 class QLedLabel : public QLabel {
     Q_OBJECT
 public:
-    explicit QLedLabel(QWidget *parent = 0);
+    explicit QLedLabel(QWidget *parent = nullptr);
+    ~QLedLabel();
 
     enum State {
-        StateOkOrange,
+        StateBlack,
         StateInitiatedBlue,
         StateContactLostRed,
         StateTreatmentGreen
     };
 
-signals:
-public slots:
-    void setState(State state);
-    void setState(bool state);
-};
+    void startFlashing(int interval = 500);
+    void stopFlashing();
 
-#endif // QLEDLABEL_H
+public slots:
+    void setGreen();
+    void setBlack();
+    void setBlue();
+    void setRed();
+    void setState(State state);
+
+private slots:
+    void toggleVisibility();
+
+private:
+    QTimer *flashTimer;
+    State currentState;
+    bool isFlashing;
+};

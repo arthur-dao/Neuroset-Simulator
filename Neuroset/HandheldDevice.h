@@ -22,6 +22,7 @@ public:
     int getBattery() { return batteryPercent; }
     RunStatus getRunStatus() { return runStatus; }
     QList<Session> getSessions();
+    Headset* getHeadset();
 
 public slots:
     void createSession();
@@ -42,11 +43,13 @@ public slots:
     bool reconnect();
     void connectionToggle();
     void receiveSession(const Session&);
+    void updateRunStatus(RunStatus runStatus);
 
 signals:
     void sessionStarted();
     void sessionStopped();
     void stopHeadset();
+    void runStatusChanged(RunStatus runStatus);
 
 private:
     Headset* headset;

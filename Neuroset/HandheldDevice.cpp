@@ -11,18 +11,24 @@ HandheldDevice::HandheldDevice(Headset* headset, int battery, QObject* parent)
 
     runTimer.start(3000); // battery lasts 5min. battery is supposed to fully deplete every 2-3 treatments (29s per treatment for testing)
 
+    connect(this, &HandheldDevice::runStatusChanged, headset, &Headset::onRunStatusChanged);
+
     pcWindow = new PCWindow();
     pcWindow->hide();
 
     //temp sessions
-    QList<Frequency> freq;
-    Session s1(freq);
-    Session s2(freq);
-    Session s3(freq);
+//    QList<Frequency> freq;
+//    Frequency f(1,2);
+//    Frequency f2(3,4);
+//    freq.append(f);
+//    freq.append(f2);
+//    Session s1(freq);
+//    Session s2(freq);
+//    Session s3(freq);
 
-    sessions.append(s1);
-    sessions.append(s2);
-    sessions.append(s3);
+//    sessions.append(s1);
+//    sessions.append(s2);
+//    sessions.append(s3);
 
 }
 
@@ -34,6 +40,7 @@ void HandheldDevice::createSession(){
         return;
     }
     runStatus = ACTIVE;
+    updateRunStatus(runStatus);
     // create a session
     qDebug() << "New session created and ready to start.";
     beginSession();
@@ -73,6 +80,7 @@ void HandheldDevice::stop() {
     }
 
     runStatus = INACTIVE;
+    updateRunStatus(runStatus);
     qDebug() << "Session and simulation stopped.";
     headset->stopSimulation();
 }
@@ -84,6 +92,7 @@ void HandheldDevice::pause() {
     }
 
     runStatus = PAUSED;
+    updateRunStatus(runStatus);
     qDebug() << "Session paused.";
 }
 
@@ -101,6 +110,7 @@ void HandheldDevice::resume() {
         createSession();
     } else if (runStatus == PAUSED) {
         runStatus = ACTIVE;
+        updateRunStatus(runStatus);
         qDebug() << "Session resumed.";
         //resume type shi
     } else if (runStatus == ACTIVE) {
@@ -136,6 +146,7 @@ void HandheldDevice::powerToggle() {
         deviceStatus = ON;
         qDebug() << "Device powered on. Ready for operation.";
         runStatus = INACTIVE;
+        updateRunStatus(runStatus);
         chargeBatteryToFull();
         runTimer.start(3000);
     } else {
@@ -161,11 +172,12 @@ void HandheldDevice::chargeBatteryToFull() { //link this to some button i guess
 
 bool HandheldDevice::disconnect() {
     if (runStatus == ACTIVE || runStatus == PAUSED) {
-        stop();
+        pause();
         runStatus = DISCONNECTED;
+        headset->contactLostStart();
         qDebug() << "Device disconnected. Awaiting reconnection...";
         // reconnect type shi
-
+        updateRunStatus(runStatus);
         return true;
     }
 
@@ -175,9 +187,9 @@ bool HandheldDevice::disconnect() {
 bool HandheldDevice::reconnect() {
     if (runStatus == DISCONNECTED) {
         runStatus = INACTIVE;
-        resume();
-        qDebug() << "Device reconnected. Resuming operations.";
-        
+        qDebug() << "Device reconnected.";
+        headset->contactLostEnd();
+        updateRunStatus(runStatus);
         return true;
     }
 
@@ -190,5 +202,14 @@ void HandheldDevice::connectionToggle() {
     } else {
         qDebug() << "Cannot toggle connection: Device is" << (deviceStatus == OFF ? "off." : (runStatus == INACTIVE ? "inactive." : "???."));
     }
+}
+
+
+Headset* HandheldDevice::getHeadset(){
+    return headset;
+}
+
+void HandheldDevice::updateRunStatus(RunStatus runStatus) {
+    emit runStatusChanged(runStatus);
 }
 

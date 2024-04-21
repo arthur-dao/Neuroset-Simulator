@@ -10,10 +10,23 @@ MainWindow::MainWindow(QWidget *parent)
 
     ui->setupUi(this);
 
+    // graph
     customPlot = new QCustomPlot(this);
     QVBoxLayout *layout = new QVBoxLayout(ui->plotWidget);
     layout->addWidget(customPlot);
     customPlot->addGraph();
+    customPlot->xAxis->setVisible(true);
+    customPlot->yAxis->setVisible(true);
+    customPlot->xAxis2->setVisible(false);
+    customPlot->yAxis2->setVisible(false);
+
+    customPlot->xAxis->setLabel("Time (Data Point Index)");
+    customPlot->yAxis->setLabel("Amplitude");
+
+
+    //Set session time
+    ui->sessionTimeEdit->hide();
+    ui->sessionTimeEdit->setCalendarPopup(true);
 
     connect(headset, &Headset::waveformsUpdated, this, &MainWindow::updateGraph, Qt::DirectConnection);
     connect(headset, &Headset::updateProgress, this, &MainWindow::updateProgress, Qt::DirectConnection);
@@ -52,8 +65,17 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->connectionButton, &QPushButton::released, device, &HandheldDevice::connectionToggle);
     connect(ui->electrodeCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(setActiveElectrodeIndex(int)));
 
-//    connect(headset, &Headset::requestStop, device, &HandheldDevice::stop);
-//    connect(device, &HandheldDevice::stopHeadset, headset, &Headset::stopSimulation);
+    connect(headset, &Headset::requestStop, device, &HandheldDevice::stop);
+
+    connect(headset, &Headset::treatmentStart, ui->treatmentLed, &QLedLabel::setGreen);
+    connect(headset, &Headset::treatmentEnd, ui->treatmentLed, &QLedLabel::setBlack);
+
+    connect(headset, &Headset::sessionStart, ui->contactLed, &QLedLabel::setBlue);
+    connect(headset, &Headset::sessionEnd, ui->contactLed, &QLedLabel::setBlack);
+
+    connect(headset, &Headset::contactLostStart, ui->contactLostLed, &QLedLabel::setRed);
+    connect(headset, &Headset::contactLostEnd, ui->contactLostLed, &QLedLabel::setBlack);
+
 }
 
 MainWindow::~MainWindow() {
@@ -72,7 +94,7 @@ void MainWindow::updateGraph() {
     if (!waveform.empty()) {
         QVector<double> qv_x(waveform.size()), qv_y(waveform.size());
         for (size_t i = 0; i < waveform.size(); ++i) {
-            qv_x[i] = i; // The x-axis can represent the time or index of the data points
+            qv_x[i] = i; // time ig bc its the index of the data point
             qv_y[i] = waveform[i]; // The y-axis represents the amplitude of the waveform
 //            qDebug() << "Point" << i << ": x =" << qv_x[i] << ", y =" << qv_y[i];
         }
@@ -134,6 +156,10 @@ void MainWindow::select(){
     else if(currMenu == SESSIONS){
         device->uploadToPC(currentIndex);
     }
+    else if(currMenu == SETDATETIME){
+        setDateTime();
+    }
+
 }
 
 void MainWindow::back(){
@@ -148,7 +174,7 @@ void MainWindow::back(){
 
 void MainWindow::updateList(){
     menuSelection->clear();
-
+    ui->sessionTimeEdit->hide();
     if(currMenu == MAIN){
         new QListWidgetItem(tr("Start Session"), menuSelection);
         new QListWidgetItem(tr("Session Log"), menuSelection);
@@ -156,6 +182,9 @@ void MainWindow::updateList(){
     }
     else if(currMenu == SESSIONS){
         int n = 1;
+        if(device->getSessions().isEmpty()){
+            new QListWidgetItem(tr("There are no sessions saved"), menuSelection);
+        }
         for(Session s : device->getSessions()){
             QString row = "SESSION #" + QString::number(n) + ": " + s.getStart().toString() + " - " + s.getEnd().toString();
             new QListWidgetItem(row, menuSelection);
@@ -164,8 +193,13 @@ void MainWindow::updateList(){
 
     }
     else if(currMenu == SETDATETIME){
-
+        ui->sessionTimeEdit->show();
     }
+}
+
+void MainWindow::setDateTime(){
+    QDateTime sessionStart = ui->sessionTimeEdit->dateTime();
+    device->getHeadset()->setCurrSessionTime(sessionStart);
 }
 
 void MainWindow::updateProgress(){
