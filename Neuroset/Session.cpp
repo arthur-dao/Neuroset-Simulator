@@ -22,7 +22,7 @@ QList<Frequency> Session::getFrequencies(){
 QString Session::toString(){
     QString text = "SESSION: "  + startDateTime.toString() + " - " + endDateTime.toString() + "\n";
     for(Frequency f : frequencies){
-        text += "\t Initial: " + QString::number(f.getInitialFrequency()) + " - Final: " +   QString::number(f.getFinalFrequency()) + "\n";
+        text += "\t Initial: " + QString::number(f.getInitialFrequency()) +  " - Final: " +  QString::number(f.getFinalFrequency()) + "\n";
     }
 
     return text;

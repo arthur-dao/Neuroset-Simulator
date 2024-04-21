@@ -42,6 +42,7 @@ public slots:
     bool disconnect();
     bool reconnect();
     void connectionToggle();
+    void receiveSession(const Session&);
     void updateRunStatus(RunStatus runStatus);
 
 signals:

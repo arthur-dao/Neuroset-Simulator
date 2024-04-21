@@ -1,4 +1,5 @@
 #include "Headset.h"
+#include "Session.h"
 #include <QDebug>
 #include <QTimer>
 
@@ -28,6 +29,7 @@ void Headset::startSimulation(int rate) {
 }
 
 void Headset::manageStages() {
+    static QList<Frequency> sessionFrequencySets;
     if (currentRunStatus == PAUSED) {
         qDebug() << "Session is paused. Waiting to resume.";
         waitingForResume = true;
@@ -58,6 +60,11 @@ void Headset::manageStages() {
 
             std::vector<float> baselineFrequencies = calculateBaselines(5);
             qDebug() << "Baseline calculated for stage" << currentStage + 1;
+
+            if(currentStage  == 0  ){
+                this->initialFrequencies = baselineFrequencies;
+
+            }
 
             qDebug() << "Starting concurrent treatment for stage" << currentStage + 1;
             emit treatmentStart();
@@ -97,6 +104,19 @@ void Headset::manageStages() {
             std::vector<float> baselineFrequencies = calculateBaselines(5);
             qDebug() << "Final baseline calculated";
 
+            //Update final frequencies
+            for(size_t x = 0; x < baselineFrequencies.size(); ++x){
+                Frequency freq(this->initialFrequencies[x], baselineFrequencies[x]);
+                sessionFrequencySets.append(freq);
+            }
+
+            //Dummy, Timmy fill
+            QDateTime dummyStartTime = QDateTime::currentDateTime();
+            QDateTime dummyEndTime = dummyStartTime.addSecs(300);
+
+            Session createdSession(sessionFrequencySets, dummyStartTime, dummyEndTime);
+
+            emit sendSession(createdSession);
 
             QTimer::singleShot(5000, this, [this]() {
                 emit updateProgress();
