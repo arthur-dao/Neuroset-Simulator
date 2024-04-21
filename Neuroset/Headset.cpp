@@ -175,6 +175,7 @@ void Headset::updateSimulationWaveforms() {
 void Headset::stopSimulation() {
     currentStage = 0;
     status = STOP;
+    qDebug() << "Session stopped";
     simulationTimer->stop();
     emit requestStop();
     emit waveformsUpdated();

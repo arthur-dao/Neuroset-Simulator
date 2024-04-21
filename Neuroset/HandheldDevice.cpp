@@ -75,13 +75,11 @@ QList<Session> HandheldDevice::getSessions(){
 
 void HandheldDevice::stop() {
     if (runStatus == INACTIVE || runStatus == DISCONNECTED) {
-        qDebug() << "No session is currently running to stop.";
         return;
     }
 
     runStatus = INACTIVE;
     updateRunStatus(runStatus);
-    qDebug() << "Session and simulation stopped.";
     headset->stopSimulation();
 }
 
