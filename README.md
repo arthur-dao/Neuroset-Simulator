@@ -11,7 +11,7 @@ Hugh:
   - Use Case and Use Case Diagram
   - State Diagram
   - Traceability Matrix
-  - Assisted in design of application (documentation of UML Class Diagram)
+  - Assisted in design of application (documentation of UML Class Diagram and Sequence Diagrams)
   - Skeleton code
   - Stop implementation
   - Progress bar implementation
