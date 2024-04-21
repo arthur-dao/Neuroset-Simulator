@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>619</width>
+    <width>601</width>
     <height>367</height>
    </rect>
   </property>
@@ -24,6 +24,9 @@
      </rect>
     </property>
     <layout class="QHBoxLayout" name="ControlButtons">
+     <property name="sizeConstraint">
+      <enum>QLayout::SetFixedSize</enum>
+     </property>
      <item>
       <widget class="QPushButton" name="pauseButton">
        <property name="text">
@@ -219,13 +222,28 @@
      <rect>
       <x>10</x>
       <y>280</y>
-      <width>168</width>
+      <width>141</width>
       <height>58</height>
      </rect>
     </property>
     <layout class="QGridLayout" name="MenuControls">
+     <property name="sizeConstraint">
+      <enum>QLayout::SetFixedSize</enum>
+     </property>
      <item row="2" column="0">
       <widget class="QPushButton" name="menuDown">
+       <property name="minimumSize">
+        <size>
+         <width>66</width>
+         <height>25</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>66</width>
+         <height>25</height>
+        </size>
+       </property>
        <property name="text">
         <string>Down</string>
        </property>
@@ -233,6 +251,18 @@
      </item>
      <item row="1" column="0">
       <widget class="QPushButton" name="menuUp">
+       <property name="minimumSize">
+        <size>
+         <width>66</width>
+         <height>25</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>66</width>
+         <height>25</height>
+        </size>
+       </property>
        <property name="text">
         <string>Up</string>
        </property>
@@ -240,6 +270,18 @@
      </item>
      <item row="1" column="1">
       <widget class="QPushButton" name="menuSelect">
+       <property name="minimumSize">
+        <size>
+         <width>66</width>
+         <height>25</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>66</width>
+         <height>25</height>
+        </size>
+       </property>
        <property name="text">
         <string>Select</string>
        </property>
@@ -247,6 +289,18 @@
      </item>
      <item row="2" column="1">
       <widget class="QPushButton" name="menuBack">
+       <property name="minimumSize">
+        <size>
+         <width>66</width>
+         <height>25</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>66</width>
+         <height>25</height>
+        </size>
+       </property>
        <property name="text">
         <string>Back</string>
        </property>
@@ -259,20 +313,48 @@
      <rect>
       <x>440</x>
       <y>270</y>
-      <width>156</width>
+      <width>151</width>
       <height>31</height>
      </rect>
     </property>
     <layout class="QHBoxLayout" name="ElectrodeControls">
+     <property name="sizeConstraint">
+      <enum>QLayout::SetFixedSize</enum>
+     </property>
      <item>
       <widget class="QLabel" name="electrodeLabel">
+       <property name="minimumSize">
+        <size>
+         <width>62</width>
+         <height>29</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>62</width>
+         <height>29</height>
+        </size>
+       </property>
        <property name="text">
         <string>Electrode</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QComboBox" name="electrodeCombo"/>
+      <widget class="QComboBox" name="electrodeCombo">
+       <property name="minimumSize">
+        <size>
+         <width>81</width>
+         <height>25</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>81</width>
+         <height>25</height>
+        </size>
+       </property>
+      </widget>
      </item>
     </layout>
    </widget>
@@ -286,6 +368,9 @@
      </rect>
     </property>
     <layout class="QHBoxLayout" name="PowerControls">
+     <property name="sizeConstraint">
+      <enum>QLayout::SetFixedSize</enum>
+     </property>
      <item>
       <widget class="QPushButton" name="connectionButton">
        <property name="font">
