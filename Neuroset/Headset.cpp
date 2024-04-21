@@ -1,4 +1,5 @@
 #include "Headset.h"
+#include "Session.h"
 #include <QDebug>
 #include <QTimer>
 
@@ -26,6 +27,8 @@ void Headset::startSimulation(int rate) {
 }
 
 void Headset::manageStages() {
+    static QList<Frequency> sessionFrequencySets;
+
     if (currentStage < 4) {
         // Wait for 5 seconds before starting the baseline calculation for stage
         qDebug() << "Calculating baseline for stage" << currentStage + 1;
@@ -40,6 +43,11 @@ void Headset::manageStages() {
 
             std::vector<float> baselineFrequencies = calculateBaselines(5);
             qDebug() << "Baseline calculated for stage" << currentStage + 1;
+
+            if(currentStage  == 0  ){
+                this->initialFrequencies = baselineFrequencies;
+
+            }
 
             qDebug() << "Starting concurrent treatment for stage" << currentStage + 1;
             startConcurrentTreatment();
@@ -67,9 +75,22 @@ void Headset::manageStages() {
                 qInfo("Headset has been disconnected");
                 return;
             }
+
             std::vector<float> baselineFrequencies = calculateBaselines(5);
             qDebug() << "Final baseline calculated";
 
+            //Update final frequencies
+            for(int x = 0; x < sessionFrequencySets.size(); ++x){
+                Frequency freq (this->initialFrequencies[x], baselineFrequencies[x]);
+                sessionFrequencySets.append(freq);
+            }
+
+            //Dummy, Timmy fill
+            QDateTime dummyStartTime = QDateTime::currentDateTime();
+            QDateTime dummyEndTime = dummyStartTime.addSecs(300);
+
+            Session createdSession(sessionFrequencySets, dummyStartTime, dummyEndTime);
+            emit sendSession(createdSession);
 
             QTimer::singleShot(5000, this, [this]() {
                 emit updateProgress();

@@ -4,6 +4,7 @@
 #include "defs.h"
 #include "Electrode.h"
 #include "TreatmentWorker.h"
+#include "Session.h"
 #include <vector>
 #include <QThread>
 #include <QObject>
@@ -31,6 +32,7 @@ signals:
     void waveformsUpdated();
     void requestStop();
     void updateProgress();
+    void sendSession(const Session& session);
 
 private slots:
     void updateSimulationWaveforms();
@@ -45,6 +47,8 @@ private:
     int currentStage = 0;
     const int totalStages = 5;
     Status status;
+    std::vector<float> initialFrequencies; // Store initial frequencies
+
 };
 
 #endif // HEADSET_H

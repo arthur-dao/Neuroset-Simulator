@@ -41,6 +41,7 @@ public slots:
     bool disconnect();
     bool reconnect();
     void connectionToggle();
+    void receiveSession(const Session&);
 
 signals:
     void sessionStarted();

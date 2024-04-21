@@ -7,6 +7,8 @@ HandheldDevice::HandheldDevice(Headset* headset, int battery, QObject* parent)
     // Initialize timers
     connect(&stopTimer, &QTimer::timeout, this, &HandheldDevice::shutdown);
     connect(&runTimer, &QTimer::timeout, this, &HandheldDevice::reduceBattery);
+    connect(headset, &Headset::sendSession, this, &HandheldDevice::receiveSession);
+
     runTimer.start(3000); // battery lasts 5min. battery is supposed to fully deplete every 2-3 treatments (29s per treatment for testing)
 
     pcWindow = new PCWindow();
@@ -35,6 +37,10 @@ void HandheldDevice::createSession(){
     // create a session
     qDebug() << "New session created and ready to start.";
     beginSession();
+}
+
+void HandheldDevice::receiveSession(const Session& session) {
+    sessions.append(session);
 }
 
 void HandheldDevice::shutdown() {
