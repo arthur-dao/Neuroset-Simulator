@@ -10,10 +10,19 @@ MainWindow::MainWindow(QWidget *parent)
 
     ui->setupUi(this);
 
+    // graph
     customPlot = new QCustomPlot(this);
     QVBoxLayout *layout = new QVBoxLayout(ui->plotWidget);
     layout->addWidget(customPlot);
     customPlot->addGraph();
+    customPlot->xAxis->setVisible(true);
+    customPlot->yAxis->setVisible(true);
+    customPlot->xAxis2->setVisible(false);
+    customPlot->yAxis2->setVisible(false);
+
+    customPlot->xAxis->setLabel("Time (Data Point Index)");
+    customPlot->yAxis->setLabel("Amplitude");
+
 
     connect(headset, &Headset::waveformsUpdated, this, &MainWindow::updateGraph, Qt::DirectConnection);
     connect(headset, &Headset::updateProgress, this, &MainWindow::updateProgress, Qt::DirectConnection);
@@ -72,7 +81,7 @@ void MainWindow::updateGraph() {
     if (!waveform.empty()) {
         QVector<double> qv_x(waveform.size()), qv_y(waveform.size());
         for (size_t i = 0; i < waveform.size(); ++i) {
-            qv_x[i] = i; // The x-axis can represent the time or index of the data points
+            qv_x[i] = i; // time ig bc its the index of the data point
             qv_y[i] = waveform[i]; // The y-axis represents the amplitude of the waveform
 //            qDebug() << "Point" << i << ": x =" << qv_x[i] << ", y =" << qv_y[i];
         }

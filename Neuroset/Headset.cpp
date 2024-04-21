@@ -26,6 +26,12 @@ void Headset::startSimulation(int rate) {
 }
 
 void Headset::manageStages() {
+    if (currentRunStatus == PAUSED) {
+        qDebug() << "Session is paused. Waiting to resume.";
+        waitingForResume = true;
+        return;
+    }
+
     if (currentStage < 4) {
         // Wait for 5 seconds before starting the baseline calculation for stage
         qDebug() << "Calculating baseline for stage" << currentStage + 1;
@@ -38,10 +44,18 @@ void Headset::manageStages() {
                 return;
             }
 
+            if (getCurrentRunStatus() == PAUSED) {
+                emit updateProgress();
+                waitingForResume = true;
+                qDebug() << "Session is paused. Waiting to resume before proceeding.";
+                return;
+            }
+
             std::vector<float> baselineFrequencies = calculateBaselines(5);
             qDebug() << "Baseline calculated for stage" << currentStage + 1;
 
             qDebug() << "Starting concurrent treatment for stage" << currentStage + 1;
+            qDebug() << "Processing input waveform and delivering feedback...";
             startConcurrentTreatment();
             simulationTimer->start(1000 / 16); // update 1/16
 
@@ -64,9 +78,17 @@ void Headset::manageStages() {
             }
 
             if(status == DISCONNECT){
+                emit updateProgress();
                 qInfo("Headset has been disconnected");
                 return;
             }
+
+            if (getCurrentRunStatus() == PAUSED) {
+                emit updateProgress();
+                qDebug() << "Session is paused. Waiting to resume before final calculations.";
+                return;
+            }
+
             std::vector<float> baselineFrequencies = calculateBaselines(5);
             qDebug() << "Final baseline calculated";
 
@@ -131,4 +153,17 @@ void Headset::stopSimulation() {
     simulationTimer->stop();
     emit requestStop();
     emit waveformsUpdated();
+}
+
+void Headset::onRunStatusChanged(RunStatus status) {
+    currentRunStatus = status;
+    if (status == ACTIVE && waitingForResume) {
+        qDebug() << "Resuming stages after pause.";
+        resumeStages();
+    }
+}
+
+void Headset::resumeStages() {
+    waitingForResume = false;
+    manageStages();
 }

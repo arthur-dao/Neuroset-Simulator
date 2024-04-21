@@ -14,6 +14,8 @@ class Headset : public QObject {
 
 public slots:
     void stopSimulation();
+    void onRunStatusChanged(RunStatus runStatus);
+
 
 public:
     explicit Headset(QObject *parent = nullptr);
@@ -25,7 +27,7 @@ public:
     void startConcurrentTreatment();
     const std::vector<float>& getActiveElectrodeWaveform(int activeElectrodeIndex) const;
     void updateAllWaveforms();
-    void manageStages();
+    RunStatus getCurrentRunStatus() const { return currentRunStatus; }
 
 signals:
     void waveformsUpdated();
@@ -45,6 +47,10 @@ private:
     int currentStage = 0;
     const int totalStages = 5;
     Status status;
+    RunStatus currentRunStatus;
+    void manageStages();
+    void resumeStages();
+    bool waitingForResume = false;
 };
 
 #endif // HEADSET_H

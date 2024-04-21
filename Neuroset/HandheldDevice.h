@@ -41,11 +41,13 @@ public slots:
     bool disconnect();
     bool reconnect();
     void connectionToggle();
+    void updateRunStatus(RunStatus runStatus);
 
 signals:
     void sessionStarted();
     void sessionStopped();
     void stopHeadset();
+    void runStatusChanged(RunStatus runStatus);
 
 private:
     Headset* headset;
