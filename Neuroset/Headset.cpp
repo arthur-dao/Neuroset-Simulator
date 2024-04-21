@@ -109,12 +109,9 @@ void Headset::manageStages() {
                 Frequency freq(this->initialFrequencies[x], baselineFrequencies[x]);
                 sessionFrequencySets.append(freq);
             }
-
-            //Dummy, Timmy fill
-            QDateTime dummyStartTime = QDateTime::currentDateTime();
-            QDateTime dummyEndTime = dummyStartTime.addSecs(300);
-
-            Session createdSession(sessionFrequencySets, dummyStartTime, dummyEndTime);
+            //currSessionTime is the start time of the session
+            QDateTime dummyEndTime = currSessionTime.addSecs(300); // norm fix
+            Session createdSession(sessionFrequencySets, currSessionTime, dummyEndTime);
 
             emit sendSession(createdSession);
 

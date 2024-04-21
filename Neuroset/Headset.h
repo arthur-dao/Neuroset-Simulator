@@ -66,7 +66,6 @@ private:
     QDateTime currSessionTime;
 
     RunStatus currentRunStatus;
-    void manageStages();
     bool waitingForResume = false;
 
 };
