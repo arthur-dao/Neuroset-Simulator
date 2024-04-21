@@ -33,6 +33,12 @@ signals:
     void waveformsUpdated();
     void requestStop();
     void updateProgress();
+    void treatmentStart();
+    void treatmentEnd();
+    void sessionStart();
+    void sessionEnd();
+    void contactLostStart();
+    void contactLostEnd();
 
 private slots:
     void updateSimulationWaveforms();
@@ -49,7 +55,6 @@ private:
     Status status;
     RunStatus currentRunStatus;
     void manageStages();
-    void resumeStages();
     bool waitingForResume = false;
 };
 

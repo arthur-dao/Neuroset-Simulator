@@ -61,8 +61,17 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->connectionButton, &QPushButton::released, device, &HandheldDevice::connectionToggle);
     connect(ui->electrodeCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(setActiveElectrodeIndex(int)));
 
-//    connect(headset, &Headset::requestStop, device, &HandheldDevice::stop);
-//    connect(device, &HandheldDevice::stopHeadset, headset, &Headset::stopSimulation);
+    connect(headset, &Headset::requestStop, device, &HandheldDevice::stop);
+
+    connect(headset, &Headset::treatmentStart, ui->treatmentLed, &QLedLabel::setGreen);
+    connect(headset, &Headset::treatmentEnd, ui->treatmentLed, &QLedLabel::setBlack);
+
+    connect(headset, &Headset::sessionStart, ui->contactLed, &QLedLabel::setBlue);
+    connect(headset, &Headset::sessionEnd, ui->contactLed, &QLedLabel::setBlack);
+
+    connect(headset, &Headset::contactLostStart, ui->contactLostLed, &QLedLabel::setRed);
+    connect(headset, &Headset::contactLostEnd, ui->contactLostLed, &QLedLabel::setBlack);
+
 }
 
 MainWindow::~MainWindow() {

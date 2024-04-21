@@ -17,7 +17,7 @@
    <widget class="QWidget" name="horizontalLayoutWidget">
     <property name="geometry">
      <rect>
-      <x>180</x>
+      <x>170</x>
       <y>270</y>
       <width>254</width>
       <height>31</height>
@@ -50,7 +50,7 @@
    <widget class="QLabel" name="batteryIndicator">
     <property name="geometry">
      <rect>
-      <x>550</x>
+      <x>540</x>
       <y>310</y>
       <width>41</width>
       <height>31</height>
@@ -61,6 +61,9 @@
     </property>
     <property name="text">
      <string>100%</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
     </property>
    </widget>
    <widget class="QTabWidget" name="tabWidget">
@@ -182,10 +185,10 @@
      </size>
     </property>
    </widget>
-   <widget class="QLedLabel" name="deviceStatus">
+   <widget class="QLedLabel" name="contactLed">
     <property name="geometry">
      <rect>
-      <x>20</x>
+      <x>10</x>
       <y>10</y>
       <width>21</width>
       <height>19</height>
@@ -204,10 +207,10 @@
    <widget class="QWidget" name="gridLayoutWidget">
     <property name="geometry">
      <rect>
-      <x>20</x>
+      <x>10</x>
       <y>280</y>
       <width>141</width>
-      <height>51</height>
+      <height>58</height>
      </rect>
     </property>
     <layout class="QGridLayout" name="MenuControls">
@@ -244,9 +247,9 @@
    <widget class="QWidget" name="horizontalLayoutWidget_2">
     <property name="geometry">
      <rect>
-      <x>450</x>
+      <x>440</x>
       <y>270</y>
-      <width>141</width>
+      <width>156</width>
       <height>31</height>
      </rect>
     </property>
@@ -266,7 +269,7 @@
    <widget class="QWidget" name="horizontalLayoutWidget_3">
     <property name="geometry">
      <rect>
-      <x>180</x>
+      <x>170</x>
       <y>310</y>
       <width>361</width>
       <height>31</height>
@@ -323,7 +326,7 @@
    <widget class="Line" name="line">
     <property name="geometry">
      <rect>
-      <x>160</x>
+      <x>150</x>
       <y>270</y>
       <width>20</width>
       <height>71</height>
@@ -343,6 +346,44 @@
     </property>
     <property name="orientation">
      <enum>Qt::Vertical</enum>
+    </property>
+   </widget>
+   <widget class="QLedLabel" name="treatmentLed">
+    <property name="geometry">
+     <rect>
+      <x>40</x>
+      <y>10</y>
+      <width>21</width>
+      <height>19</height>
+     </rect>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::Box</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Sunken</enum>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLedLabel" name="contactLostLed">
+    <property name="geometry">
+     <rect>
+      <x>70</x>
+      <y>10</y>
+      <width>21</width>
+      <height>19</height>
+     </rect>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::Box</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Sunken</enum>
+    </property>
+    <property name="text">
+     <string/>
     </property>
    </widget>
   </widget>

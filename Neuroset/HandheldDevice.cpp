@@ -83,7 +83,7 @@ void HandheldDevice::pause() {
 
     runStatus = PAUSED;
     updateRunStatus(runStatus);
-//    qDebug() << "Session paused.";
+    qDebug() << "Session paused.";
 }
 
 void HandheldDevice::resume() {
@@ -162,8 +162,9 @@ void HandheldDevice::chargeBatteryToFull() { //link this to some button i guess
 
 bool HandheldDevice::disconnect() {
     if (runStatus == ACTIVE || runStatus == PAUSED) {
-        stop();
+        pause();
         runStatus = DISCONNECTED;
+        headset->contactLostStart();
         qDebug() << "Device disconnected. Awaiting reconnection...";
         // reconnect type shi
         updateRunStatus(runStatus);
@@ -176,8 +177,8 @@ bool HandheldDevice::disconnect() {
 bool HandheldDevice::reconnect() {
     if (runStatus == DISCONNECTED) {
         runStatus = INACTIVE;
-//        resume();
         qDebug() << "Device reconnected.";
+        headset->contactLostEnd();
         updateRunStatus(runStatus);
         return true;
     }
