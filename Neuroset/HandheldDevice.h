@@ -22,6 +22,7 @@ public:
     int getBattery() { return batteryPercent; }
     RunStatus getRunStatus() { return runStatus; }
     QList<Session> getSessions();
+    Headset* getHeadset();
 
 public slots:
     void createSession();
