@@ -52,7 +52,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->connectionButton, &QPushButton::released, device, &HandheldDevice::connectionToggle);
     connect(ui->electrodeCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(setActiveElectrodeIndex(int)));
 
-    connect(headset, &Headset::requestStop, device, &HandheldDevice::stop);
+//    connect(headset, &Headset::requestStop, device, &HandheldDevice::stop);
 //    connect(device, &HandheldDevice::stopHeadset, headset, &Headset::stopSimulation);
 }
 

@@ -80,8 +80,8 @@ void Headset::manageStages() {
             qDebug() << "Final baseline calculated";
 
             //Update final frequencies
-            for(int x = 0; x < sessionFrequencySets.size(); ++x){
-                Frequency freq (this->initialFrequencies[x], baselineFrequencies[x]);
+            for(size_t x = 0; x < baselineFrequencies.size(); ++x){
+                Frequency freq(this->initialFrequencies[x], baselineFrequencies[x]);
                 sessionFrequencySets.append(freq);
             }
 
@@ -90,6 +90,7 @@ void Headset::manageStages() {
             QDateTime dummyEndTime = dummyStartTime.addSecs(300);
 
             Session createdSession(sessionFrequencySets, dummyStartTime, dummyEndTime);
+
             emit sendSession(createdSession);
 
             QTimer::singleShot(5000, this, [this]() {
