@@ -158,6 +158,7 @@ void MainWindow::select(){
     }
     else if(currMenu == SETDATETIME){
         setDateTime();
+        back();
     }
 
 }
@@ -200,6 +201,7 @@ void MainWindow::updateList(){
 void MainWindow::setDateTime(){
     QDateTime sessionStart = ui->sessionTimeEdit->dateTime();
     device->getHeadset()->setCurrSessionTime(sessionStart);
+    qDebug() << "Session start date and time set to " << sessionStart.toString();
 }
 
 void MainWindow::updateProgress(){
