@@ -9,6 +9,8 @@ HandheldDevice::HandheldDevice(Headset* headset, int battery, QObject* parent)
     connect(&runTimer, &QTimer::timeout, this, &HandheldDevice::reduceBattery);
     runTimer.start(3000); // battery lasts 5min. battery is supposed to fully deplete every 2-3 treatments (29s per treatment for testing)
 
+    connect(this, &HandheldDevice::runStatusChanged, headset, &Headset::onRunStatusChanged);
+
     pcWindow = new PCWindow();
     pcWindow->hide();
 
@@ -36,6 +38,7 @@ void HandheldDevice::createSession(){
         return;
     }
     runStatus = ACTIVE;
+    updateRunStatus(runStatus);
     // create a session
     qDebug() << "New session created and ready to start.";
     beginSession();
@@ -71,6 +74,7 @@ void HandheldDevice::stop() {
     }
 
     runStatus = INACTIVE;
+    updateRunStatus(runStatus);
     qDebug() << "Session and simulation stopped.";
     headset->stopSimulation();
 }
@@ -82,6 +86,7 @@ void HandheldDevice::pause() {
     }
 
     runStatus = PAUSED;
+    updateRunStatus(runStatus);
     qDebug() << "Session paused.";
 }
 
@@ -99,6 +104,7 @@ void HandheldDevice::resume() {
         createSession();
     } else if (runStatus == PAUSED) {
         runStatus = ACTIVE;
+        updateRunStatus(runStatus);
         qDebug() << "Session resumed.";
         //resume type shi
     } else if (runStatus == ACTIVE) {
@@ -134,6 +140,7 @@ void HandheldDevice::powerToggle() {
         deviceStatus = ON;
         qDebug() << "Device powered on. Ready for operation.";
         runStatus = INACTIVE;
+        updateRunStatus(runStatus);
         chargeBatteryToFull();
         runTimer.start(3000);
     } else {
@@ -159,11 +166,12 @@ void HandheldDevice::chargeBatteryToFull() { //link this to some button i guess
 
 bool HandheldDevice::disconnect() {
     if (runStatus == ACTIVE || runStatus == PAUSED) {
-        stop();
+        pause();
         runStatus = DISCONNECTED;
+        headset->contactLostStart();
         qDebug() << "Device disconnected. Awaiting reconnection...";
         // reconnect type shi
-
+        updateRunStatus(runStatus);
         return true;
     }
 
@@ -173,9 +181,9 @@ bool HandheldDevice::disconnect() {
 bool HandheldDevice::reconnect() {
     if (runStatus == DISCONNECTED) {
         runStatus = INACTIVE;
-        resume();
-        qDebug() << "Device reconnected. Resuming operations.";
-        
+        qDebug() << "Device reconnected.";
+        headset->contactLostEnd();
+        updateRunStatus(runStatus);
         return true;
     }
 
@@ -190,6 +198,12 @@ void HandheldDevice::connectionToggle() {
     }
 }
 
+
 Headset* HandheldDevice::getHeadset(){
     return headset;
 }
+
+void HandheldDevice::updateRunStatus(RunStatus runStatus) {
+    emit runStatusChanged(runStatus);
+}
+

@@ -1,6 +1,7 @@
 #include "Waveform.h"
 #include <cmath>
 #include <chrono>
+#include <QDebug>
 
 Band::Band(float freq, float amp) : frequency(freq), amplitude(amp) {}
 
@@ -23,6 +24,7 @@ std::vector<float> Waveform::generateSignal(int sampleRate, int durationSeconds)
 float Waveform::calculateDominantFrequency() {
     float numerator = 0.0f;
     float denominator = 0.0f;
+
     for (const Band& band : bands) {
         float amplitudeSquared = band.amplitude * band.amplitude;
         numerator += band.frequency * amplitudeSquared;
@@ -33,7 +35,7 @@ float Waveform::calculateDominantFrequency() {
 
 void Waveform::applyLENS(int sampleRate, float durationSeconds, float offsetFrequency) {
     int lensIterations = static_cast<int>(sampleRate * durationSeconds);
-    int updatesPerSecond = 1;
+    int updatesPerSecond = 1; //16?
     int updateInterval = sampleRate / updatesPerSecond;
 
     for (int i = 0; i < lensIterations; ++i) {
