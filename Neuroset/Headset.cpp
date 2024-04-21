@@ -50,6 +50,7 @@ void Headset::manageStages() {
 
             if (getCurrentRunStatus() == PAUSED) {
                 emit updateProgress();
+                waitingForResume = true;
                 qDebug() << "Session is paused. Waiting to resume before final calculations.";
                 return;
             } else if (getCurrentRunStatus() == DISCONNECTED) {
@@ -93,6 +94,7 @@ void Headset::manageStages() {
 
             if (getCurrentRunStatus() == PAUSED) {
                 emit updateProgress();
+                waitingForResume = true;
                 qDebug() << "Session is paused. Waiting to resume before final calculations.";
                 return;
             } else if (getCurrentRunStatus() == DISCONNECTED) {
