@@ -5,6 +5,15 @@
 #include "Session.h"
 #include "Frequency.h"
 
+/**
+ * @file PCWindow.h
+ * @brief Declaration of the PCWindow class.
+ * 
+ * This file contains the declaration of the PCWindow class, which represents
+ * the window interface for the PC application used to manage sessions and uploaded data.
+ * It includes methods for displaying sessions and handling new uploads.
+ */
+
 namespace Ui {
 class PCWindow;
 }

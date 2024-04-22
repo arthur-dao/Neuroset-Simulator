@@ -11,6 +11,16 @@
 #include <QTimer>
 #include <QDateTime>
 
+/**
+ * @file Headset.h
+ * @brief Declaration of the Headset class.
+ * 
+ * This file contains the declaration of the Headset class, which represents
+ * the Neureset EEG headset used for direct neurofeedback therapy.
+ * It includes methods for managing treatment stages, starting and stopping simulation,
+ * and updating electrode waveforms.
+ */
+
 class Headset : public QObject {
     Q_OBJECT
 
