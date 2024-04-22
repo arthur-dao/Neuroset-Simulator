@@ -14,6 +14,8 @@ Headset::Headset(QObject *parent)
     status = DISCONNECT;
     connect(simulationTimer, &QTimer::timeout, this, &Headset::updateSimulationWaveforms);
     currSessionTime = QDateTime::currentDateTime();
+    sessionTimer = new QTimer(this);
+    connect(sessionTimer, &QTimer::timeout, this, &Headset::incrementSessionDuration);
 }
 
 Headset::~Headset() {
@@ -26,10 +28,20 @@ void Headset::startSimulation(int rate) {
     this->sampleRate = rate;
     status = CONNECT;
     manageStages();
+    sessionDuration = 0;
+    sessionTimer->start(1000); //1s interval
 }
 
 void Headset::manageStages() {
     static QList<Frequency> sessionFrequencySets;
+    int timePerStage = 6;
+    int initialTime = 29;
+
+    int remainingTime = initialTime - currentStage * timePerStage;
+
+    emit updateCountdown(QString("0:%1").arg(remainingTime, 2, 10, QChar('0')));
+
+
     if (currentRunStatus == PAUSED) {
         qDebug() << "Session is paused. Waiting to resume.";
         waitingForResume = true;
@@ -39,7 +51,7 @@ void Headset::manageStages() {
     if (currentStage < 4) {
         // Wait for 5 seconds before starting the baseline calculation for stage
         qDebug() << "Calculating baseline for stage" << currentStage + 1;
-        QTimer::singleShot(5000, this, [this]() {
+        QTimer::singleShot(5000, this, [this, remainingTime]() {
 
             //If the session's been stopped
             if(status == STOP){
@@ -80,11 +92,13 @@ void Headset::manageStages() {
                 manageStages();  // recursion!
                 emit treatmentEnd();
             });
+            int newTime = remainingTime - 6; // Subtract 6 seconds after each stage
+            emit updateCountdown(QString("0:%1").arg(newTime, 2, 10, QChar('0')));
         });
     } else if (currentStage == 4) {
         // Wait for 5 seconds before starting the final baseline calculation
         qDebug() << "Calculating final 5-second baseline";
-        QTimer::singleShot(5000, this, [this]() {
+        QTimer::singleShot(5000, this, [this, remainingTime]() {
             //If the session's been stopped
             if(status == STOP){
                 emit updateProgress();
@@ -112,16 +126,17 @@ void Headset::manageStages() {
                 sessionFrequencySets.append(freq);
             }
             //currSessionTime is the start time of the session
-            QDateTime dummyEndTime = currSessionTime.addSecs(300); // norm fix
+            QDateTime dummyEndTime = currSessionTime.addSecs(sessionDuration);
             Session createdSession(sessionFrequencySets, currSessionTime, dummyEndTime);
 
             emit sendSession(createdSession);
 
-            QTimer::singleShot(5000, this, [this]() {
+            QTimer::singleShot(5000, this, [this, remainingTime]() {
                 emit updateProgress();
                 qDebug() << "Final stage complete, stopping simulation.";
                 emit sessionEnd();
                 stopSimulation();
+                emit updateCountdown(QString("0:%1").arg(remainingTime - 5, 2, 10, QChar('0'))); // Final 5 seconds
             });
         });
     }
@@ -179,11 +194,17 @@ void Headset::stopSimulation() {
     simulationTimer->stop();
     emit requestStop();
     emit waveformsUpdated();
+    sessionTimer->stop();
     emit sessionEnd();
 }
 
 void Headset::onRunStatusChanged(RunStatus status) {
     currentRunStatus = status;
+    if (status == PAUSED) {
+        sessionTimer->stop();
+    } else if (status == ACTIVE) {
+        sessionTimer->start(1000);
+    }
     if (status == ACTIVE && waitingForResume) {
         qDebug() << "Resuming stages after pause.";
         waitingForResume = false;
@@ -193,4 +214,8 @@ void Headset::onRunStatusChanged(RunStatus status) {
 
 void Headset::setCurrSessionTime(QDateTime newDateTime){
     currSessionTime = newDateTime;
+}
+
+void Headset::incrementSessionDuration() {
+    sessionDuration++;
 }

@@ -52,5 +52,7 @@ private slots:
 
     void updateProgress();
 
+    void onUpdateCountdown(const QString& time);
+
 };
 #endif // MAINWINDOW_H

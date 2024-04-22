@@ -76,12 +76,17 @@ MainWindow::MainWindow(QWidget *parent)
     connect(headset, &Headset::contactLostStart, ui->contactLostLed, &QLedLabel::setRed);
     connect(headset, &Headset::contactLostEnd, ui->contactLostLed, &QLedLabel::setBlack);
 
+    connect(headset, &Headset::updateCountdown, this, &MainWindow::onUpdateCountdown);
 }
 
 MainWindow::~MainWindow() {
     delete headset;
     delete device;
     delete ui;
+}
+
+void MainWindow::onUpdateCountdown(const QString& time) {
+    ui->timer->setText(time);
 }
 
 void MainWindow::updateBattery() {

@@ -49,6 +49,7 @@ signals:
     void sessionEnd();
     void contactLostStart();
     void contactLostEnd();
+    void updateCountdown(QString time);
 
 private slots:
     void updateSimulationWaveforms();
@@ -63,12 +64,15 @@ private:
     int currentStage = 0;
     const int totalStages = 5;
     Status status;
-    std::vector<float> initialFrequencies; // Store initial frequencies
+    std::vector<float> initialFrequencies;
 
     QDateTime currSessionTime;
 
     RunStatus currentRunStatus;
     bool waitingForResume = false;
+    QTimer *sessionTimer;
+    int sessionDuration;
+    void incrementSessionDuration();
 
 };
 
