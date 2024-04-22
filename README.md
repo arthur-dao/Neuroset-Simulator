@@ -32,6 +32,7 @@ Timothy:
 - Design decisions document
 - Assisted in design of application (design decisions, UML diagram)
 - Debugging
+- Recorded and uploaded video
 
 Norman:
 - Drafted use case model
