@@ -28,7 +28,8 @@ Hugh:
   - Testing and bug fixing
 
 Taseen:
-- UML class diagram 
+- UML class diagram
+- Assisted design decisions
 - Store initial and final baselines for session logging
 - Communicate and emit session data between Headset and HandHeld Device
 - Class documentation
