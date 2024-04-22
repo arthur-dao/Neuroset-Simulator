@@ -6,7 +6,16 @@
 --- 
 
 Arthur:
-
+ - Sequence Diagrams
+ - Continuous development of Neureset UI
+   - Rough and final draft
+ - LED base logic & UI
+ - Device connection toggle
+ - Testing and debugging
+   - Fixed logic for device & run states
+   - Fixed UI overlapping with constraints
+   - Error handling for when battery is 0%
+  
 Hugh:
   - Use Case and Use Case Diagram
   - State Diagram
