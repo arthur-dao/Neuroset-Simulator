@@ -4,6 +4,15 @@
 #include <vector>
 #include <random>
 
+/**
+ * @file Waveform.h
+ * @brief Declaration of the Waveform class and the Band class.
+ * 
+ * This file contains the declaration of the Waveform class, which represents a waveform composed
+ * of multiple frequency bands. It also declares the Band class, which represents a frequency band
+ * with a specific frequency and amplitude.
+ */
+
 class Band {
 public:
     float frequency;

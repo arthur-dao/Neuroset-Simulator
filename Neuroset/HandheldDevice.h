@@ -12,6 +12,16 @@
 
 using namespace std;
 
+/**
+ * @file HandheldDevice.h
+ * @brief Declaration of the HandheldDevice class.
+ * 
+ * This file contains the declaration of the HandheldDevice class, which represents
+ * a handheld device used to control and monitor the Neureset EEG device.
+ * It includes methods for managing sessions, controlling the device's power,
+ * and interacting with the PC.
+ */
+
 class HandheldDevice : public QObject {
     Q_OBJECT
 

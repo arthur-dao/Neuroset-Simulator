@@ -6,6 +6,17 @@
 #include <QDebug>
 #include "Frequency.h"
 
+
+/**
+ * @file Session.h
+ * @brief Declaration of the Session class.
+ * 
+ * This file contains the declaration of the Session class, which represents a session
+ * containing a list of frequency data recorded over a period of time. It includes methods
+ * to retrieve session start and end times, frequencies, and convert session information
+ * to a string format.
+ */
+
 class Session {
 public:
     Session(QList<Frequency>, QDateTime=QDateTime::currentDateTime(), QDateTime=QDateTime::currentDateTime().addSecs(300));

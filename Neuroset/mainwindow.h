@@ -13,6 +13,16 @@ QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
 
+/**
+ * @file MainWindow.h
+ * @brief Declaration of the MainWindow class.
+ * 
+ * This file contains the declaration of the MainWindow class, which represents
+ * the main window interface for the Neureset application.
+ * It includes methods for updating battery status, displaying EEG data graphically,
+ * and handling user interactions with the menu.
+ */
+
 class MainWindow : public QMainWindow {
     Q_OBJECT
 
