@@ -63,3 +63,33 @@ Norman:
 - LED logic
 - Headset connection
 - Debugging
+
+File Organization:
+Source Files:
+ Electrode.cpp
+ Frequency.cpp
+ HandheldDevice.cpp
+ Headhead.cpp
+ main.cpp
+ mainwindow.cpp
+ pcwindow.cpp
+ qcustomplot.cpp
+ qledlabel.cpp
+ Session.cpp
+ TreatmentWorker.cpp
+ Waveform.cpp
+Header Files:
+ Electrode.h
+ Frequency.h
+ HandheldDevice.h
+ Headhead.h
+ main.h
+ mainwindow.h
+ pcwindow.h
+ qcustomplot.h
+ qledlabel.h
+ Session.h
+ TreatmentWorker.h
+ Waveform.h
+Other Files:
+ defs.h
