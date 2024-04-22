@@ -21,6 +21,7 @@ Hugh:
 Taseen:
 - UML class diagram
 - Store initial and final baselines for session logging
+- Class documentation
 - Debugging
 
 Timothy:
