@@ -29,7 +29,7 @@ Hugh:
 
 Taseen:
 - UML class diagram
-- Assisted design decisions
+- Assisted design decisions document
 - Store initial and final baselines for session logging
 - Communicate and emit session data between Headset and HandHeld Device
 - Class documentation
