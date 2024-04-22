@@ -21,6 +21,7 @@ Hugh:
 Taseen:
 - UML class diagram
 - Store initial and final baselines for session logging
+- Debugging
 
 Timothy:
 - Menu navigation (up/down/select/back)
@@ -29,6 +30,7 @@ Timothy:
 - Set date time
 - Design decisions document
 - Assisted in design of application (design decisions, UML diagram)
+- Debugging
 
 Norman:
 - Drafted use case model
@@ -43,3 +45,4 @@ Norman:
 - Battery logic
 - LED logic
 - Headset connection
+- Debugging
