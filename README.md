@@ -19,8 +19,27 @@ Hugh:
   - Testing and bug fixing
 
 Taseen:
+- UML class diagram
+- Store initial and final baselines for session logging
 
 Timothy:
+- Menu navigation (up/down/select/back)
+- Session logging
+- PC upload
+- Set date time
+- Design decisions document
+- Assisted in design of application (design decisions, UML diagram)
 
 Norman:
-
+- Drafted use case model
+- Waveform generation
+- Waveform graph
+- Concurrent LENS treatment
+- Dominant frequency calculation
+- Pause/resume functionaly
+- Stage management
+- Countdown
+- Store time elapsed for session logging
+- Battery logic
+- LED logic
+- Headset connection
