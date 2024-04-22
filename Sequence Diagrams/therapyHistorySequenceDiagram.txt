@@ -8,9 +8,14 @@ participant Electrode
 participant Session
 participant Frequency
 
-MainWindow->PCWindow: Request therapy history
-PCWindow->HandheldDevice: Retrieve therapy history
-HandheldDevice->Session: Access therapy sessions
-Session->HandheldDevice: Return therapy sessions data
-HandheldDevice->PCWindow: Send therapy sessions data
-PCWindow->MainWindow: Display therapy history
+note over MainWindow: Select "Session Log" in Menu
+MainWindow->MainWindow: select()
+MainWindow->HandheldDevice: uploadToPC()
+activate MainWindow
+activate HandheldDevice
+HandheldDevice->PCWindow: newUpload()
+activate PCWindow
+deactivate MainWindow
+PCWindow->PCWindow: show()
+deactivate PCWindow
+deactivate HandheldDevice

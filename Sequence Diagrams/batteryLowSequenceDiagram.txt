@@ -8,9 +8,12 @@ participant Electrode
 participant Session
 participant Frequency
 
-HandheldDevice->PCWindow: Send battery level
-PCWindow->MainWindow: Display battery level
-note over HandheldDevice, MainWindow: If battery level is low
-HandheldDevice->HandheldDevice: Trigger low battery warning
-HandheldDevice->PCWindow: Send low battery warning
-PCWindow->MainWindow: Display low battery warning
+note over MainWindow: Select "Start Session" in Menu
+MainWindow->MainWindow: select()
+MainWindow->HandheldDevice: createSession()
+activate MainWindow
+activate HandheldDevice
+note over HandheldDevice: If battery is zero, exit
+HandheldDevice->HandheldDevice: shutdown()
+deactivate MainWindow
+deactivate HandheldDevice

@@ -8,13 +8,14 @@ participant Electrode
 participant Session
 participant Frequency
 
-HandheldDevice->Electrode: Monitor electrode connection
-Electrode->HandheldDevice: Return connection status
-note over HandheldDevice, Electrode: If connection is lost
-HandheldDevice->HandheldDevice: Trigger connection loss warning
-HandheldDevice->PCWindow: Send connection loss warning
-PCWindow->MainWindow: Display connection loss warning
-note over HandheldDevice, MainWindow: If connection is not reestablished within 5 minutes
-HandheldDevice->HandheldDevice: End session
-HandheldDevice->PCWindow: Send session end notification
-PCWindow->MainWindow: Display session end notification
+HandheldDevice->HandheldDevice: connectionToggle() 
+note over HandheldDevice: If connection is lost, attempt to reconnect
+HandheldDevice->HandheldDevice: reconnect()
+HandheldDevice->Headset: contactLostStart()
+activate HandheldDevice
+activate Headset
+Headset->MainWindow: setRed()
+HandheldDevice->Headset: getSimulationTimer()->start()
+deactivate Headset
+deactivate HandheldDevice
+HandheldDevice->HandheldDevice: updateRunStatus() 

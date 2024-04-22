@@ -7,20 +7,59 @@ participant Headset
 participant Electrode
 participant Session
 participant Frequency
+participant qLedLabel
 
-HandheldDevice->MainWindow: beginSession(start)
-MainWindow->PCWindow: displaySessions(sessions)
-MainWindow->HandheldDevice: createSessions()
-HandheldDevice->Headset: calculateAllBaselines()
-Headset->Electrode: calculateBaseline()
-Electrode->Headset: sendTreatment()
-Headset->Electrode: treatAllElectrodes()
-Electrode->Session: ???
-Session->Frequency: Recalculate brainwave frequency
-Frequency->Session: Repeat process for duration of one second
-Session->HandheldDevice: Monitor session (green light flashes)
-HandheldDevice->PCWindow: Pause session if contact is lost (red light flashes)
-PCWindow->MainWindow: End session if contact is not reestablished within 5 minutes
-MainWindow->PCWindow: Calculate new baseline at end of session
-PCWindow->HandheldDevice: User can voluntarily pause the session
-HandheldDevice->Session: Record before-and-after dominant average frequencies for each site
+note over MainWindow: Select "Start Session" in Menu
+MainWindow->MainWindow: select()
+MainWindow->HandheldDevice: createSession()
+activate MainWindow
+activate HandheldDevice
+HandheldDevice->HandheldDevice: beginSession()
+deactivate MainWindow
+
+HandheldDevice->Headset: startSimulation()
+activate Headset
+Headset->MainWindow: sessionStart()
+activate MainWindow
+deactivate HandheldDevice
+
+loop while current stage is not 5
+  Headset->Headset: manageStages()
+  deactivate MainWindow
+  Headset->Headset: calculateBaselines()
+  Headset->MainWindow: treatmentStart()
+  activate MainWindow
+  MainWindow->qLedLabel: setGreen()
+  activate qLedLabel
+  deactivate MainWindow
+  Headset->Headset: startConcurrentTreatment()
+  deactivate qLedLabel
+  Headset->MainWindow: updateProgress()
+  activate MainWindow
+  Headset->Headset: manageStages()
+  deactivate MainWindow
+  Headset->MainWindow: treatmentEnd()
+  activate MainWindow
+  MainWindow->qLedLabel: setBlack()
+  activate qLedLabel
+  deactivate MainWindow
+end
+
+Headset->Headset: calculateBaselines()
+deactivate qLedLabel
+Headset->MainWindow: sendSession()
+activate MainWindow
+MainWindow->HandheldDevice: receiveSession()
+deactivate MainWindow
+Headset->MainWindow: updateProgress()
+activate MainWindow
+MainWindow->MainWindow: updateProgress()
+deactivate MainWindow
+Headset->MainWindow: sessionEnd()
+activate MainWindow
+MainWindow->qLedLabel: setBlack()
+deactivate MainWindow
+activate qLedLabel
+Headset->Headset: stopSimulation()
+deactivate Headset
+deactivate qLedLabel
