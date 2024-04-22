@@ -3,6 +3,8 @@
 > **Team Project**
 > #### Members: Arthur, Hugh, Taseen, Timothy, Norman
 
+VIDEO: https://youtu.be/TXBnGxLoMb0
+
 --- 
 
 Arthur:
@@ -16,7 +18,7 @@ Arthur:
    - Fixed UI overlapping with constraints
    - Error handling for when battery is 0%
   
-Hugh:
+Hugh (Scrum master):
   - Use Case and Use Case Diagram
   - State Diagram
   - Traceability Matrix
