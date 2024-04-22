@@ -9,7 +9,7 @@ Arthur:
  - Sequence Diagrams
  - Continuous development of Neureset UI
    - Rough and final draft
- - LED base logic & UI
+ - Custom LED class, base logic, and UI
  - Device connection toggle
  - Testing and debugging
    - Fixed logic for device & run states
