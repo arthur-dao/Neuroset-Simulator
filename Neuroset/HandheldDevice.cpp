@@ -61,6 +61,7 @@ void HandheldDevice::shutdown() {
 }
 
 void HandheldDevice::beginSession() {
+    headset->contactLostEnd();
     if (deviceStatus != ON) {
         qDebug() << "Trying to begin a session without it being set to active.";
         return;
@@ -89,7 +90,7 @@ void HandheldDevice::pause() {
         qDebug() << "No active session to pause.";
         return;
     }
-
+    headset->setStatus(PAUSE);
     runStatus = PAUSED;
     updateRunStatus(runStatus);
     qDebug() << "Session paused.";
@@ -109,6 +110,7 @@ void HandheldDevice::resume() {
         createSession();
     } else if (runStatus == PAUSED) {
         runStatus = ACTIVE;
+        headset->setStatus(CONNECT);
         updateRunStatus(runStatus);
         qDebug() << "Session resumed.";
         //resume type shi

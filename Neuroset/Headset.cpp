@@ -54,9 +54,9 @@ void Headset::manageStages() {
         QTimer::singleShot(5000, this, [this, remainingTime]() {
 
             //If the session's been stopped
-            if(status == STOP){
-                emit updateProgress();
+            if(status == STOP || status == PAUSE){
                 status = DISCONNECT;
+                stopSimulation();
                 return;
             }
 
@@ -100,7 +100,8 @@ void Headset::manageStages() {
         qDebug() << "Calculating final 5-second baseline";
         QTimer::singleShot(5000, this, [this, remainingTime]() {
             //If the session's been stopped
-            if(status == STOP){
+            if(status == STOP || status == PAUSE){
+                stopSimulation();
                 emit updateProgress();
                 status = DISCONNECT;
                 return;
@@ -196,6 +197,8 @@ void Headset::stopSimulation() {
     emit waveformsUpdated();
     sessionTimer->stop();
     emit sessionEnd();
+    emit updateCountdown(QString("0:%1").arg(29, 2, 10, QChar('0')));
+    emit updateProgress();
 }
 
 void Headset::onRunStatusChanged(RunStatus status) {
@@ -218,4 +221,8 @@ void Headset::setCurrSessionTime(QDateTime newDateTime){
 
 void Headset::incrementSessionDuration() {
     sessionDuration++;
+}
+
+void Headset::setStatus(Status newStatus){
+    status = newStatus;
 }

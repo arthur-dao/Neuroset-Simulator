@@ -42,6 +42,7 @@ public:
 
     void manageStages();
     void setCurrSessionTime(QDateTime);
+    void setStatus(Status);
 
     QTimer* getSimulationTimer() {return simulationTimer; };
 
