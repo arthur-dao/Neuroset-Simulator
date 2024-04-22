@@ -31,6 +31,7 @@ Taseen:
 - UML class diagram
 - Store initial and final baselines for session logging
 - Class documentation
+- Testing session stop and restart functionality
 - Debugging
 
 Timothy:
