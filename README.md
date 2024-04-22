@@ -44,6 +44,7 @@ Timothy:
 - Design decisions document
 - Assisted in design of application (design decisions, UML diagram)
 - Debugging
+- Error scenarios fixing
 - Recorded and uploaded video
 
 Norman:
@@ -52,7 +53,7 @@ Norman:
 - Waveform graph
 - Concurrent LENS treatment
 - Dominant frequency calculation
-- Pause/resume functionaly
+- Pause/resume functionality
 - Stage management
 - Countdown
 - Store time elapsed for session logging
